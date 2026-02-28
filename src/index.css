@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
 
 :root {
   --cream: #FDF6EC;
   --brown: #6B3A1F;
-  --orange: #F5A623;
+  --orange: #F0A500;
   --espresso: #3E1F08;
   --white: #FFFFFF;
   --black: #000000;
 
   --font-heading: 'Playfair Display', serif;
-  --font-nav: 'Josefin Sans', sans-serif;
-  --font-body: 'Lora', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-accent: 'Cormorant Garamond', serif;
 }
 
 * {
@@ -49,8 +49,13 @@ ul {
 button {
   cursor: pointer;
   border: none;
-  font-family: var(--font-nav);
+  font-family: var(--font-heading);
   transition: all 0.3s ease;
+}
+
+.accent-serif {
+  font-family: var(--font-accent);
+  font-style: italic;
 }
 
 .container {
