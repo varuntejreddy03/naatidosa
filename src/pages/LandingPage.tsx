@@ -315,47 +315,47 @@ const LandingPage = () => {
       </section>
 
       {/* Menu Section */}
-      <section id="menu" className="menu-section bg-cream">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="section-header text-center"
-          >
-            <span className="sub-tag">The Menu</span>
-            <h2 className="text-brown">Crispy Golden <span className="text-orange italic">Treasures</span></h2>
-            <p className="section-desc">Authentic recipes from our family to yours. Fresh every day.</p>
-          </motion.div>
-
-          <div className="menu-categories-grid">
-            {Object.entries(menuCategories).map(([category, items], catIndex) => (
-              <div key={category} className="menu-category-block">
-                <h3 className="category-title text-orange">{category}</h3>
-                <div className="menu-grid">
-                  {items.map((item, index) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      viewport={{ once: true }}
-                      className="menu-card-v2"
-                    >
-                      <div className="menu-card-content">
-                        <div className="menu-header">
-                          <span className="menu-emoji">{item.emoji}</span>
-                          <span className="menu-price">{item.price}</span>
-                        </div>
-                        <h4>{item.name}</h4>
-                        <p>{item.desc}</p>
-                        <div className="menu-tags">
-                          {item.tags.map(tag => (
-                            <span key={tag} className="tag">{tag}</span>
-                          ))}
-                        </div>
+      <section id="menu" className="menu-section-pos">
+        <div className="menu-pos-header">
+          <span className="sub-tag">The Menu</span>
+          <h2 className="text-brown" style={{fontSize:'2.8rem', margin:'0.3rem 0 0.5rem'}}>Crispy Golden <span className="text-orange italic">Treasures</span></h2>
+          <p style={{color:'var(--espresso)', opacity:0.6, fontSize:'1rem'}}>Authentic recipes from our family to yours. Fresh every day.</p>
+        </div>
+        <div className="menu-pos-body">
+          <nav className="menu-pos-sidebar">
+            {Object.keys(menuCategories).map((cat) => (
+              <a
+                key={cat}
+                href={`#cat-${cat.replace(/\s+/g,'-')}`}
+                className="menu-sidebar-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                {cat}
+              </a>
+            ))}
+          </nav>
+          <div className="menu-pos-content">
+            {Object.entries(menuCategories).map(([category, items]) => (
+              <div key={category} id={`cat-${category.replace(/\s+/g,'-')}`} className="menu-pos-category">
+                <div className="menu-pos-cat-heading">
+                  <span>{category}</span>
+                  <div className="menu-pos-cat-underline" />
+                </div>
+                <div className="menu-pos-grid">
+                  {items.map((item) => (
+                    <div key={item.id} className="menu-pos-card">
+                      <div className="menu-pos-card-left">
+                        <span className="menu-pos-name">{item.name}</span>
+                        <span className="menu-pos-price">{item.price}</span>
+                        <span className="menu-pos-desc">{item.desc}</span>
                       </div>
-                    </motion.div>
+                      <div className="menu-pos-card-right">
+                        <img src={heroDosa} alt={item.name} className="menu-pos-img" />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -743,20 +743,29 @@ const LandingPage = () => {
         .a-feat { display: flex; gap: 1.5rem; }
         .feat-icon { font-size: 1.5rem; background: var(--cream); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
 
-        /* Updated Menu Layout */
-        .menu-section { padding: 120px 0; }
-        .menu-categories-grid { display: flex; flex-direction: column; gap: 8rem; }
-        .category-title { font-size: 2.8rem; margin-bottom: 3rem; text-align: center; font-family: var(--font-heading); font-style: italic; position: relative; display: inline-block; left: 50%; transform: translateX(-50%); letter-spacing: -1px; }
-        .category-title::after { content: ''; position: absolute; bottom: -10px; left: 20%; right: 20%; height: 3px; background: var(--orange); border-radius: 50px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; width: 100%; }
-        .menu-card-v2 { background: white; border-radius: 25px; padding: 2rem; transition: 0.4s; border: 1px solid rgba(107,58,31,0.05); }
-        .menu-card-v2:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(107,58,31,0.08); }
-        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .menu-emoji { font-size: 2.5rem; }
-        .menu-price { font-weight: 800; color: var(--brown); font-size: 1.1rem; }
-        .menu-card-v2 h4 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--espresso); }
-        .menu-card-v2 p { opacity: 0.6; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5; }
-        .menu-tags .tag { background: var(--cream); color: var(--brown); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+        /* POS Menu Section */
+        .menu-section-pos { background: var(--cream); padding: 80px 0 100px; }
+        .menu-pos-header { max-width: 1300px; margin: 0 auto; padding: 0 2rem 3rem; text-align: center; }
+        .menu-pos-body { max-width: 1300px; margin: 0 auto; padding: 0 2rem; display: flex; gap: 0; height: 80vh; }
+        .menu-pos-sidebar { width: 180px; flex-shrink: 0; overflow-y: auto; padding-right: 16px; padding-top: 4px; scrollbar-width: none; }
+        .menu-pos-sidebar::-webkit-scrollbar { display: none; }
+        .menu-sidebar-link { display: block; padding: 10px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #8E8E93; text-decoration: none; transition: 0.2s; border-left: 3px solid transparent; line-height: 1.3; }
+        .menu-sidebar-link:hover { background: rgba(107,58,31,0.08); border-left-color: var(--brown); color: var(--brown); font-weight: 600; }
+        .menu-pos-content { flex: 1; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 48px; padding-bottom: 40px; scrollbar-width: thin; scrollbar-color: rgba(107,58,31,0.2) transparent; }
+        .menu-pos-cat-heading { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .menu-pos-cat-heading span { font-family: Georgia, 'Playfair Display', serif; font-size: 28px; color: var(--brown); font-style: italic; font-weight: 700; line-height: 1.2; }
+        .menu-pos-cat-underline { width: 60px; height: 2px; background: var(--orange); margin-top: 8px; border-radius: 2px; }
+        .menu-pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .menu-pos-card { height: 100px; padding: 12px 16px; border-radius: 12px; background: #fff; border: 1px solid rgba(107,58,31,0.07); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: 0.2s; box-shadow: 0 2px 8px rgba(107,58,31,0.04); }
+        .menu-pos-card:hover { background: #fffaf4; box-shadow: 0 6px 20px rgba(107,58,31,0.09); }
+        .menu-pos-card-left { display: flex; flex-direction: column; justify-content: center; gap: 3px; flex: 1; min-width: 0; overflow: hidden; }
+        .menu-pos-name { font-size: 15px; font-weight: 600; color: var(--espresso); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .menu-pos-price { font-size: 14px; font-weight: 500; color: var(--brown); }
+        .menu-pos-desc { font-size: 12px; color: #8E8E93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .menu-pos-card-right { position: relative; flex-shrink: 0; }
+        .menu-pos-img { width: 80px; height: 72px; border-radius: 8px; object-fit: cover; display: block; }
+        .menu-pos-add { position: absolute; bottom: -6px; right: -6px; width: 28px; height: 28px; border-radius: 50%; background: var(--brown); color: white; font-size: 18px; line-height: 1; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 400; transition: 0.2s; box-shadow: 0 2px 8px rgba(107,58,31,0.3); }
+        .menu-pos-add:hover { background: var(--espresso); transform: scale(1.1); }
 
         /* Gallery Section */
         .gallery-section { padding: 120px 0; }
@@ -1075,31 +1084,13 @@ const LandingPage = () => {
           .hero-image-frame { height: 320px; width: 100%; max-width: 400px; margin: 0 auto; border-width: 8px; }
 
           .section-header h2 { font-size: 2.5rem; }
-          .about-section, .menu-section, .gallery-section, .events-section, .visit-section { padding: 60px 0; }
-          
-          /* Menu Horizontal Swiping */
-          .menu-grid { 
-            display: flex; 
-            overflow-x: auto; 
-            gap: 1.5rem; 
-            padding: 0.5rem 0.5rem 2.5rem; 
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            margin: 0 -1.2rem; /* Bleed to edges */
-            padding-left: 1.2rem;
-            padding-right: 1.2rem;
-          }
-          .menu-grid::-webkit-scrollbar { display: none; }
-          
-          .menu-card-v2 { 
-            min-width: 290px; 
-            flex-shrink: 0;
-            scroll-snap-align: center; 
-            margin-bottom: 0 !important;
-          }
-          .menu-category-block { margin-bottom: 1.5rem; }
-          .category-title { font-size: 1.8rem; margin-bottom: 1.2rem; }
+          .about-section, .gallery-section, .events-section, .visit-section { padding: 60px 0; }
+
+          /* POS Menu Mobile */
+          .menu-pos-sidebar { display: none; }
+          .menu-pos-body { padding: 0 1rem; height: auto; }
+          .menu-pos-content { overflow-y: visible; }
+          .menu-pos-grid { grid-template-columns: 1fr; }
 
           .about-img, .events-img { height: 300px; border-radius: 20px; }
           
