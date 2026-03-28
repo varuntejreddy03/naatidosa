@@ -19,71 +19,186 @@ const g3 = '/images/g3.png';
 const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
+const DEFAULT_MENU_IMAGE = '/plaindosa.jpg';
+
+const menuImageMap: Record<number, string> = {
+  101: '/plaindosa.jpg',
+  102: '/eggdosa.jpg',
+  103: '/gheekharamdosa.jpg',
+  104: '/Ghee%20Pudi%20Dosa.jpg',
+  105: '/Set%20Dosa.jpg',
+  106: '/Cheeze%20Dosa.jpg',
+  107: '/Onion%20Dosa.jpg',
+  108: '/Cheeze%20Dosa.jpg',
+
+  201: '/Benne%20Dosa.jpg',
+  202: '/Mysore%20Masala%20Dosa.jpg',
+  203: '/Pudina%20Dosa.jpg',
+
+  301: '/Chef%27s%20Special%20Dosa.jpg',
+
+  401: '/thatte%20idli.jpg',
+  402: '/gheepodiidli.jpg',
+  403: '/gheepodiidli.jpg',
+  404: '/sambar%20idli.jpg',
+
+  501: '/mini%20idli%20ghee%20podi.jpg',
+  502: '/Ghee%20Pudi%20Chitti%20Idli.jpg',
+  503: '/Ghee%20Karam%20Chitti%20Idli.jpg',
+  504: '/sambar%20idli.jpg',
+
+  601: '/pani%20puri.jpg',
+  602: '/masala%20puri.jpg',
+  603: '/dahi%20puri.jpg',
+  604: '/bhel%20puri.jpg',
+  605: '/samosa%20chaat.jpg',
+  606: '/samosa%20chaat.jpg',
+  607: '/mirchi%20bajji.jpg',
+  608: '/samosa%20chaat.jpg',
+
+  701: '/bhel%20puri.jpg',
+
+  801: '/chikku%20shake.jpg',
+  802: '/falooda.jpg',
+  803: '/fresh%20lime%20soda.jpg',
+  804: '/tea.jpg',
+  805: '/south%20indian%20filter%20coffee.jpg',
+
+  901: '/Bun%20Maska.jpg',
+
+  1001: '/chicken%20momos.jpg',
+  1002: '/veg%20momos.jpg',
+
+  1101: '/chicken%20puff%20bakery.jpg',
+  1102: '/chicken%20puff%20bakery.jpg',
+  1103: '/Paneer%20Puff.jpg',
+
+  1201: '/mirchi%20bajji.jpg',
+  1202: '/Egg%20Bajji.jpg',
+};
+
 const reviewsData = [
   { id: 1, name: "Varun Reddy", text: "The most authentic Dosa I've had in Florida. The Mysore Masala is a must-try! Spicy and flavorful.", rating: 5, date: "2 days ago" },
   { id: 2, name: "Sarah J.", text: "Softest Idlis ever! Their food truck is such a vibe in Delray Beach. Friendly service too!", rating: 5, date: "1 week ago" },
   { id: 3, name: "Rahul S.", text: "The Benne Dosa took me straight back to Davangere. Absolutely delicious and crispy!", rating: 5, date: "3 days ago" },
 ];
+function getMenuImage(itemId: number) {
+  return menuImageMap[itemId] || DEFAULT_MENU_IMAGE;
+}
+
+function MenuCard({
+  item,
+  onSelect,
+}: {
+  item: { id: number; name: string; desc: string; price: string };
+  onSelect?: (itemName: string) => void;
+}) {
+  const img = getMenuImage(item.id);
+  return (
+    <div
+      className="menu-pos-card"
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect?.(item.name)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect?.(item.name);
+        }
+      }}
+      aria-label={`Order ${item.name}`}
+    >
+      <div className="menu-pos-card-left">
+        <span className="menu-pos-name">{item.name}</span>
+        <span className="menu-pos-price">{item.price}</span>
+        <span className="menu-pos-desc">{item.desc}</span>
+      </div>
+      <div className="menu-pos-card-right">
+        <img
+          src={img}
+          alt={item.name}
+          className="menu-pos-img"
+          onError={(e) => {
+            e.currentTarget.src = DEFAULT_MENU_IMAGE;
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 const menuCategories = {
-  "Dosa Bar": [
-    { id: 101, name: "Benne Dosa", desc: "Davangere style butter dosa.", price: "$12.99", tags: ["Classic"], emoji: "🥞" },
-    { id: 102, name: "Mysore Masala Dosa", desc: "Spicy red chutney & potato.", price: "$13.99", tags: ["Spicy"], emoji: "🍃" },
-    { id: 103, name: "Egg Dosa", desc: "Topped with spiced beaten eggs.", price: "$12.49", tags: ["Protein"], emoji: "🥚" },
-    { id: 104, name: "Cheezy Dosa", desc: "Melting cheese blend.", price: "$13.49", tags: ["Kids"], emoji: "🧀" },
-    { id: 105, name: "Set Dosa (3 pcs)", desc: "Soft, spongy thick dosas.", price: "$11.99", tags: ["Bestseller"], emoji: "🥞" },
-    { id: 106, name: "Ghee Roast", desc: "Crispy, cooked in pure ghee.", price: "$10.99", tags: ["Pure Ghee"], emoji: "🔥" },
-    { id: 107, name: "Pudina Dosa", desc: "Fresh mint and green herbs.", price: "$11.49", tags: ["Herbal"], emoji: "🌿" },
+  "Dosa": [
+    { id: 101, name: "Plain Dosa", desc: "Crispy thin rice & lentil crepe.", price: "$9.99" },
+    { id: 102, name: "Egg Dosa", desc: "Topped with spiced beaten eggs.", price: "$12.49" },
+    { id: 103, name: "Ghee Karam Dosa", desc: "Spicy karam podi with pure ghee.", price: "$11.99" },
+    { id: 104, name: "Ghee Pudi Dosa", desc: "Crispy dosa with gunpowder & ghee.", price: "$11.99" },
+    { id: 105, name: "Set Dosa", desc: "Soft, spongy thick dosas (3 pcs).", price: "$11.99" },
+    { id: 106, name: "Cheeze Dosa", desc: "Melting cheese blend inside.", price: "$13.49" },
+    { id: 107, name: "Onion Dosa", desc: "Crispy dosa with caramelised onions.", price: "$11.49" },
+    { id: 108, name: "Paneer Dosa", desc: "Spiced cottage cheese filling.", price: "$13.99" },
   ],
-  "Idli Sec": [
-    { id: 151, name: "Thatte Idli", desc: "Plate-sized soft steamed cake.", price: "$6.99", tags: ["Steamed"], emoji: "⚪" },
-    { id: 152, name: "Ghee Pudi Thatte Idli", desc: "With ghee and spicy podi.", price: "$7.99", tags: ["Signature"], emoji: "🌶️" },
+  "Karnataka Specials": [
+    { id: 201, name: "Benne Dosa", desc: "Davangere style butter dosa.", price: "$12.99" },
+    { id: 202, name: "Mysore Masala Dosa", desc: "Spicy red chutney & potato filling.", price: "$13.99" },
+    { id: 203, name: "Pudina Dosa", desc: "Fresh mint and green herb dosa.", price: "$11.49" },
   ],
-  "Street Bites": [
-    { id: 201, name: "Pani Puri", desc: "Crispy hollow puris with spiced water.", price: "$8.99", tags: ["Popular"], emoji: "🥙" },
-    { id: 202, name: "Sev Puri", desc: "Potatoes, chutneys, and fine sev.", price: "$9.49", tags: ["Crunchy"], emoji: "🥗" },
-    { id: 203, name: "Dahi Puri", desc: "Sweet yogurt and tangy chutneys.", price: "$9.99", tags: ["Trio"], emoji: "🥣" },
-    { id: 204, name: "Masala Puri", desc: "Crushed puris with hot peas gravy.", price: "$8.99", tags: ["Hot"], emoji: "🍛" },
-    { id: 205, name: "Bhel Puri", desc: "Puffed rice mixed with chutneys.", price: "$8.49", tags: ["Light"], emoji: "🍿" },
+  "Chef's Special Dosa": [
+    { id: 301, name: "Chef's Special Dosa", desc: "Ask your server for today's special.", price: "$15.99" },
   ],
-  "Bajji Sec": [
-    { id: 251, name: "Mirchi Bajji", desc: "Stuffed, cut, or regular chili fritters.", price: "$7.99", tags: ["Spicy"], emoji: "🌶️" },
-    { id: 252, name: "Egg Bajji", desc: "Boiled egg halves in chickpea batter.", price: "$8.49", tags: ["Protein"], emoji: "🥚" },
+  "Idli": [
+    { id: 401, name: "Thatte Idli", desc: "Plate-sized soft steamed cake.", price: "$6.99" },
+    { id: 402, name: "Ghee Pudi Thatte Idli", desc: "With ghee and spicy podi.", price: "$7.99" },
+    { id: 403, name: "Ghee Karam Thatte Idli", desc: "Thatte idli with karam & ghee.", price: "$7.99" },
+    { id: 404, name: "Sambar Thatte Idli", desc: "Served with rich lentil sambar.", price: "$7.49" },
   ],
-  "Puffs & Appetizers": [
-    { id: 301, name: "Chicken Puff", desc: "Flaky pastry with spiced chicken.", price: "$4.49", tags: ["Bakery"], emoji: "🥐" },
-    { id: 302, name: "Paneer Puff", desc: "Savey paneer masala filling.", price: "$4.49", tags: ["Veg"], emoji: "🧀" },
-    { id: 303, name: "Egg Puff", desc: "Classic bakery style egg pastry.", price: "$3.99", tags: ["Snack"], emoji: "🥯" },
-    { id: 304, name: "Chicken Pakoda", desc: "Deep-fried spiced chicken bites.", price: "$10.99", tags: ["Crispy"], emoji: "🍗" },
-    { id: 305, name: "Samosa", desc: "Traditional Indian street snack.", price: "$3.99", tags: ["Classic"], emoji: "🥙" },
-    { id: 306, name: "Maska Bun", desc: "Soft bun with generous butter.", price: "$4.99", tags: ["Comfort"], emoji: "🥯" },
+  "Guntur Specials": [
+    { id: 501, name: "Chitti Idli", desc: "Bite-sized mini steamed idlis.", price: "$7.99" },
+    { id: 502, name: "Ghee Pudi Chitti Idli", desc: "Mini idlis tossed in ghee & podi.", price: "$8.99" },
+    { id: 503, name: "Ghee Karam Chitti Idli", desc: "Mini idlis with spicy karam ghee.", price: "$8.99" },
+    { id: 504, name: "Sambar Idli", desc: "Soft idlis dunked in sambar.", price: "$7.49" },
   ],
-  "MOMO Sec": [
-    { id: 351, name: "Veg Momos", desc: "Steamed vegetable dumplings.", price: "$10.99", tags: ["Healthy"], emoji: "🥟" },
-    { id: 352, name: "Chicken Momos", desc: "Juicy chicken dumplings.", price: "$11.99", tags: ["Juicy"], emoji: "🍗" },
+  "Chats": [
+    { id: 601, name: "Pani Puri", desc: "Crispy puris with spiced water.", price: "$8.99" },
+    { id: 602, name: "Masala Puri", desc: "Crushed puris with hot peas gravy.", price: "$8.99" },
+    { id: 603, name: "Dahi Puri", desc: "Sweet yogurt and tangy chutneys.", price: "$9.99" },
+    { id: 604, name: "Bhel Puri", desc: "Puffed rice mixed with chutneys.", price: "$8.49" },
+    { id: 605, name: "Samosa Chat", desc: "Crispy samosa with chaat toppings.", price: "$9.49" },
+    { id: 606, name: "Samosa Dahi Chat", desc: "Samosa with yogurt & chutneys.", price: "$9.99" },
+    { id: 607, name: "Bajji Chat", desc: "Fritters topped with chaat masala.", price: "$8.99" },
+    { id: 608, name: "Aloo Samosa", desc: "Classic potato-filled pastry.", price: "$3.99" },
+  ],
+  "Vizag Specials": [
+    { id: 701, name: "Muri Mixture", desc: "Puffed rice with spicy Vizag masala.", price: "$7.99" },
   ],
   "Drinks": [
-    { id: 401, name: "Filter Coffee", desc: "Traditional South Indian coffee.", price: "$3.99", tags: ["Hot"], emoji: "☕" },
-    { id: 402, name: "Tea", desc: "Hand-crafted aromatic spiced tea.", price: "$3.49", tags: ["Aromatic"], emoji: "🍵" },
-    { id: 403, name: "Falooda", desc: "Layered rose & vermicelli dessert.", price: "$8.99", tags: ["Sweet"], emoji: "🍧" },
-    { id: 404, name: "Mango Lassi", desc: "Creamy alphanso mango drink.", price: "$5.99", tags: ["Fresh"], emoji: "🥭" },
-    { id: 405, name: "Reg Drinks", desc: "Selection of cold sodas.", price: "$2.49", tags: ["Cold"], emoji: "🥤" },
+    { id: 801, name: "Chikku Shake", desc: "Creamy sapota milkshake.", price: "$5.99" },
+    { id: 802, name: "Falooda", desc: "Layered rose & vermicelli dessert drink.", price: "$8.99" },
+    { id: 803, name: "Fresh Lime Soda", desc: "Chilled lime with soda & salt.", price: "$3.99" },
+    { id: 804, name: "Tea", desc: "Hand-crafted aromatic spiced tea.", price: "$3.49" },
+    { id: 805, name: "Filter Coffee", desc: "Traditional South Indian coffee.", price: "$3.99" },
   ],
-  "Mains": [
-    { id: 501, name: "Butter Chicken Curry", desc: "Creamy, tomato-based luxury chicken.", price: "$16.99", tags: ["Rich"], emoji: "🍲" },
-    { id: 502, name: "Chicken Tikka Masala", desc: "Roasted chunks in spiced gravy.", price: "$16.99", tags: ["Spicy"], emoji: "🥘" },
-    { id: 503, name: "Paneer Butter Masala", desc: "Soft paneer in makhani sauce.", price: "$15.99", tags: ["Veg"], emoji: "🧈" },
-    { id: 504, name: "Veg Biryani", desc: "Fragrant rice with garden vegetables.", price: "$13.99", tags: ["Healthy"], emoji: "🍚" },
-    { id: 505, name: "Chicken Biryani", desc: "Traditional marinated chicken rice.", price: "$15.99", tags: ["Royal"], emoji: "🍗" },
-    { id: 506, name: "Paneer Biryani", desc: "Spiced paneer cubes in basmati.", price: "$14.99", tags: ["Cheese"], emoji: "🧀" },
-    { id: 507, name: "Egg Biryani", desc: "Rice with hard-boiled eggs.", price: "$13.99", tags: ["Protein"], emoji: "🥚" },
-    { id: 508, name: "Butter Naan", desc: "Soft leavened bread with butter.", price: "$3.49", tags: ["Warm"], emoji: "🫓" },
-    { id: 509, name: "Garlic Naan", desc: "Topped with minced garlic.", price: "$3.99", tags: ["Flavorful"], emoji: "🧄" },
-  ]
+  "Hyderabadi Specials": [
+    { id: 901, name: "Bun Maska", desc: "Soft bun with generous butter.", price: "$4.99" },
+  ],
+  "Momos": [
+    { id: 1001, name: "Chicken Momos", desc: "Juicy steamed chicken dumplings.", price: "$11.99" },
+    { id: 1002, name: "Veg Momos", desc: "Steamed vegetable dumplings.", price: "$10.99" },
+  ],
+  "Puffs": [
+    { id: 1101, name: "Chicken Puff", desc: "Flaky pastry with spiced chicken.", price: "$4.49" },
+    { id: 1102, name: "Egg Puff", desc: "Classic bakery style egg pastry.", price: "$3.99" },
+    { id: 1103, name: "Paneer Puff", desc: "Savory paneer masala filling.", price: "$4.49" },
+  ],
+  "Bajji": [
+    { id: 1201, name: "Mirchi Bajji", desc: "Reg / Stuffed / Cut chili fritters.", price: "$7.99" },
+    { id: 1202, name: "Egg Bajji", desc: "Boiled egg halves in chickpea batter.", price: "$8.49" },
+  ],
 };
 
 const LandingPage = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -115,6 +230,11 @@ const LandingPage = () => {
     }
   };
 
+  const handleMenuItemSelect = (itemName: string) => {
+    setSelectedMenuItem(itemName);
+    setShowPopup(true);
+  };
+
   return (
     <div className="landing-page">
       {/* Order Online Popup */}
@@ -137,7 +257,7 @@ const LandingPage = () => {
               </button>
               <div className="popup-header">
                 <img src={logo01} alt="Logo" className="popup-logo" />
-                <h3>Order Online Now</h3>
+                <h3>{selectedMenuItem ? `${selectedMenuItem}` : 'Order Online Now'}</h3>
                 <p>Hot, crispy, and authentic South Indian food delivered to your door.</p>
               </div>
               <div className="popup-options">
@@ -152,7 +272,7 @@ const LandingPage = () => {
                 </div>
                 <button onClick={() => { setShowPopup(false); scrollToSection('visit'); }} className="popup-btn dine">
                   <MapPin size={24} />
-                  <span>Find Our Truck (Dine-In)</span>
+                  <span>Pickup at Truck</span>
                 </button>
               </div>
             </motion.div>
@@ -346,16 +466,7 @@ const LandingPage = () => {
                 </div>
                 <div className="menu-pos-grid">
                   {items.map((item) => (
-                    <div key={item.id} className="menu-pos-card">
-                      <div className="menu-pos-card-left">
-                        <span className="menu-pos-name">{item.name}</span>
-                        <span className="menu-pos-price">{item.price}</span>
-                        <span className="menu-pos-desc">{item.desc}</span>
-                      </div>
-                      <div className="menu-pos-card-right">
-                        <img src={heroDosa} alt={item.name} className="menu-pos-img" />
-                      </div>
-                    </div>
+                    <MenuCard key={item.id} item={item} onSelect={handleMenuItemSelect} />
                   ))}
                 </div>
               </div>
@@ -700,7 +811,49 @@ const LandingPage = () => {
         .sub-tag { font-family: var(--font-accent); font-weight: 600; font-style: italic; text-transform: none; letter-spacing: 1px; font-size: 1.35rem; margin-bottom: 1rem; display: block; color: var(--orange); opacity: 0.95; }
 
         /* Hero */
-        .hero-section { position: relative; padding: 30px 0 80px; min-height: 70vh; display: flex; align-items: center; overflow: hidden; }
+        .hero-section {
+          position: relative;
+          padding: 64px 0 110px;
+          min-height: 82vh;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+          isolation: isolate;
+        }
+        .hero-section::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: url('/images/hero-dosa.jpg');
+          background-size: cover;
+          background-position: center;
+          opacity: 0.11;
+          z-index: 0;
+          transform: scale(1.03);
+        }
+        .hero-section::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(110deg, rgba(253,246,236,0.96) 0%, rgba(253,246,236,0.9) 52%, rgba(253,246,236,0.86) 100%);
+          z-index: 1;
+        }
+        .hero-blobs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+        .hero-blob { position: absolute; border-radius: 50%; filter: blur(2px); }
+        .blob-1 {
+          width: min(34vw, 430px);
+          aspect-ratio: 1;
+          left: -120px;
+          top: 20px;
+          background: radial-gradient(circle, rgba(240,165,0,0.17) 0%, rgba(240,165,0,0.05) 65%, transparent 100%);
+        }
+        .blob-2 {
+          width: min(28vw, 340px);
+          aspect-ratio: 1;
+          right: -90px;
+          bottom: -60px;
+          background: radial-gradient(circle, rgba(107,58,31,0.14) 0%, rgba(107,58,31,0.04) 70%, transparent 100%);
+        }
         .hero-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; position: relative; z-index: 2; }
         .hero-headline { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1; font-weight: 900; font-style: italic; margin-bottom: 2rem; color: var(--brown); letter-spacing: -2px; text-shadow: 0 10px 30px rgba(62,31,8,0.05); }
         .text-stroke { -webkit-text-stroke: 1.5px var(--brown); color: transparent; }
@@ -756,14 +909,14 @@ const LandingPage = () => {
         .menu-pos-cat-heading span { font-family: Georgia, 'Playfair Display', serif; font-size: 28px; color: var(--brown); font-style: italic; font-weight: 700; line-height: 1.2; }
         .menu-pos-cat-underline { width: 60px; height: 2px; background: var(--orange); margin-top: 8px; border-radius: 2px; }
         .menu-pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .menu-pos-card { height: 100px; padding: 12px 16px; border-radius: 12px; background: #fff; border: 1px solid rgba(107,58,31,0.07); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: 0.2s; box-shadow: 0 2px 8px rgba(107,58,31,0.04); }
+        .menu-pos-card { height: 130px; padding: 14px 16px; border-radius: 14px; background: #fff; border: 1px solid rgba(107,58,31,0.07); display: flex; align-items: center; justify-content: space-between; gap: 14px; transition: 0.2s; box-shadow: 0 2px 8px rgba(107,58,31,0.04); }
         .menu-pos-card:hover { background: #fffaf4; box-shadow: 0 6px 20px rgba(107,58,31,0.09); }
-        .menu-pos-card-left { display: flex; flex-direction: column; justify-content: center; gap: 3px; flex: 1; min-width: 0; overflow: hidden; }
-        .menu-pos-name { font-size: 15px; font-weight: 600; color: var(--espresso); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        .menu-pos-price { font-size: 14px; font-weight: 500; color: var(--brown); }
-        .menu-pos-desc { font-size: 12px; color: #8E8E93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .menu-pos-card-left { display: flex; flex-direction: column; justify-content: center; gap: 5px; flex: 1; min-width: 0; overflow: hidden; }
+        .menu-pos-name { font-size: 16px; font-weight: 600; color: var(--espresso); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .menu-pos-price { font-size: 15px; font-weight: 600; color: var(--brown); }
+        .menu-pos-desc { font-size: 12.5px; color: #8E8E93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .menu-pos-card-right { position: relative; flex-shrink: 0; }
-        .menu-pos-img { width: 80px; height: 72px; border-radius: 8px; object-fit: cover; display: block; }
+        .menu-pos-img { width: 100px; height: 90px; border-radius: 10px; object-fit: cover; display: block; }
         .menu-pos-add { position: absolute; bottom: -6px; right: -6px; width: 28px; height: 28px; border-radius: 50%; background: var(--brown); color: white; font-size: 18px; line-height: 1; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 400; transition: 0.2s; box-shadow: 0 2px 8px rgba(107,58,31,0.3); }
         .menu-pos-add:hover { background: var(--espresso); transform: scale(1.1); }
 
@@ -1076,7 +1229,9 @@ const LandingPage = () => {
           .container { padding: 0 1.2rem; }
           
           /* Hero Mobile Fix */
-          .hero-section { padding: 40px 0 60px; text-align: center; }
+          .hero-section { padding: 52px 0 72px; min-height: 74vh; text-align: center; }
+          .hero-section::before { opacity: 0.1; background-position: center right; }
+          .hero-section::after { background: linear-gradient(180deg, rgba(253,246,236,0.95) 0%, rgba(253,246,236,0.9) 100%); }
           .hero-container { grid-template-columns: 1fr; gap: 3rem; }
           .hero-headline { font-size: 3.5rem; margin-bottom: 1.5rem; font-style: italic; }
           .hero-description { font-size: 1.1rem; margin: 0 auto 2.5rem; }
