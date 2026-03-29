@@ -310,6 +310,30 @@ const MenuPage = () => {
               linear-gradient(180deg, #FDF6EC 0%, #FFF8F1 48%, #F6EBDD 100%);
             color: var(--espresso);
           }
+          .menu-page,
+          .menu-page .container,
+          .menu-order-shell,
+          .menu-order-top,
+          .menu-order-intro,
+          .menu-order-summary,
+          .menu-toolbar,
+          .menu-toolbar-main,
+          .menu-search-input-wrap,
+          .menu-toolbar-pills,
+          .menu-category-strip,
+          .menu-board-content,
+          .menu-group,
+          .menu-group-grid,
+          .menu-item-card,
+          .menu-item-copy,
+          .menu-item-media {
+            min-width: 0;
+            max-width: 100%;
+          }
+          .menu-page .container {
+            padding-left: clamp(0.95rem, 2.4vw, 2rem);
+            padding-right: clamp(0.95rem, 2.4vw, 2rem);
+          }
           .menu-order-shell {
             padding: 32px 0 72px;
           }
@@ -328,6 +352,7 @@ const MenuPage = () => {
             border: 1px solid rgba(107,58,31,0.1);
             box-shadow: 0 20px 44px rgba(107,58,31,0.08);
             backdrop-filter: blur(12px);
+            overflow: hidden;
           }
           .menu-order-intro {
             border-radius: 30px;
@@ -461,6 +486,7 @@ const MenuPage = () => {
             align-items: center;
             gap: 0.7rem;
             flex: 1 1 320px;
+            width: 100%;
             padding: 0.95rem 1rem;
             border-radius: 18px;
             background: #fff;
@@ -489,6 +515,7 @@ const MenuPage = () => {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
+            min-width: 0;
           }
           .menu-toolbar-pill {
             display: inline-flex;
@@ -502,6 +529,7 @@ const MenuPage = () => {
             font-size: 0.9rem;
             font-weight: 600;
             white-space: nowrap;
+            flex-shrink: 0;
           }
           .menu-toolbar-pill.active {
             background: var(--brown);
@@ -515,9 +543,12 @@ const MenuPage = () => {
           .menu-category-strip {
             display: flex;
             gap: 0.75rem;
+            width: 100%;
             overflow-x: auto;
             padding-top: 1rem;
             scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
           }
           .menu-category-strip::-webkit-scrollbar {
             display: none;
@@ -590,6 +621,7 @@ const MenuPage = () => {
             margin-bottom: 1.1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid rgba(107,58,31,0.1);
+            min-width: 0;
           }
           .menu-group-heading span {
             display: block;
@@ -720,7 +752,7 @@ const MenuPage = () => {
               padding-top: 24px;
             }
             .menu-toolbar {
-              top: 84px;
+              top: 78px;
             }
             .menu-order-intro,
             .menu-order-summary,
@@ -732,6 +764,10 @@ const MenuPage = () => {
             .menu-order-intro {
               padding: 1.6rem;
             }
+            .menu-empty-state,
+            .menu-group {
+              scroll-margin-top: 132px;
+            }
             .menu-group-heading {
               flex-direction: column;
               align-items: flex-start;
@@ -740,15 +776,80 @@ const MenuPage = () => {
               grid-template-columns: minmax(0, 1fr) 140px;
             }
           }
-          @media (max-width: 640px) {
+          @media (max-width: 768px) {
+            .menu-order-shell {
+              padding-bottom: 56px;
+            }
             .menu-order-intro h1 {
-              font-size: 2.4rem;
+              font-size: clamp(2.05rem, 9vw, 2.8rem);
+              line-height: 0.98;
+            }
+            .menu-order-intro p {
+              margin-top: 0.8rem;
+              font-size: 0.95rem;
+              line-height: 1.58;
+            }
+            .menu-order-status-row {
+              gap: 0.55rem;
+              margin-top: 1.1rem;
+            }
+            .menu-order-status,
+            .menu-order-note {
+              padding: 0.56rem 0.78rem;
+              font-size: 0.82rem;
+            }
+            .menu-toolbar {
+              top: 72px;
+            }
+            .menu-category-strip button {
+              padding: 0.68rem 0.86rem;
+              font-size: 0.84rem;
+            }
+            .menu-category-strip button strong {
+              min-width: 26px;
+              height: 26px;
+              font-size: 0.75rem;
+            }
+            .menu-empty-state,
+            .menu-group {
+              scroll-margin-top: 124px;
+            }
+            .menu-item-card {
+              grid-template-columns: minmax(0, 1fr) 120px;
+              min-height: 172px;
+              padding: 0.85rem;
+              gap: 0.7rem;
+            }
+            .menu-item-media {
+              min-height: 134px;
+            }
+            .menu-item-title-block h3 {
+              font-size: 1.16rem;
+            }
+            .menu-item-copy p {
+              margin-top: 0.55rem;
+              font-size: 0.88rem;
+              line-height: 1.5;
+              -webkit-line-clamp: 2;
+            }
+            .menu-item-footer {
+              padding-top: 0.72rem;
+            }
+          }
+          @media (max-width: 640px) {
+            .menu-page .container {
+              padding-left: 0.8rem;
+              padding-right: 0.8rem;
+            }
+            .menu-order-top {
+              gap: 0.8rem;
             }
             .menu-order-summary {
               grid-template-columns: 1fr;
             }
             .menu-toolbar {
-              padding: 0.9rem;
+              top: 68px;
+              padding: 0.78rem;
             }
             .menu-toolbar-main {
               flex-direction: column;
@@ -756,32 +857,88 @@ const MenuPage = () => {
             }
             .menu-search-input-wrap {
               flex-basis: auto;
+              min-width: 0;
             }
             .menu-toolbar-pills {
+              width: 100%;
               overflow-x: auto;
               flex-wrap: nowrap;
               padding-bottom: 0.15rem;
               scrollbar-width: none;
+              -webkit-overflow-scrolling: touch;
+              overscroll-behavior-x: contain;
             }
             .menu-toolbar-pills::-webkit-scrollbar {
               display: none;
             }
+            .menu-category-strip {
+              padding-top: 0.85rem;
+            }
             .menu-empty-state,
             .menu-group {
               padding: 1rem;
+              scroll-margin-top: 116px;
             }
             .menu-group-heading h2 {
               font-size: 1.55rem;
             }
+            .menu-group-heading p {
+              max-width: none;
+            }
             .menu-item-card {
               grid-template-columns: 1fr;
+              min-height: 0;
             }
             .menu-item-media {
               order: -1;
-              min-height: 190px;
+              min-height: 176px;
             }
             .menu-item-title-block h3 {
               font-size: 1.28rem;
+            }
+          }
+          @media (max-width: 480px) {
+            .menu-order-shell {
+              padding-top: 18px;
+              padding-bottom: 44px;
+            }
+            .menu-page .container {
+              padding-left: 0.7rem;
+              padding-right: 0.7rem;
+            }
+            .menu-order-intro,
+            .menu-order-summary,
+            .menu-toolbar,
+            .menu-group,
+            .menu-empty-state {
+              border-radius: 20px;
+            }
+            .menu-order-intro {
+              padding: 1.2rem;
+            }
+            .menu-order-status-row {
+              gap: 0.45rem;
+            }
+            .menu-toolbar-pill {
+              padding: 0.66rem 0.8rem;
+              font-size: 0.8rem;
+            }
+            .menu-category-strip {
+              gap: 0.55rem;
+            }
+            .menu-category-strip button {
+              padding: 0.62rem 0.75rem;
+              font-size: 0.8rem;
+            }
+            .menu-group-heading {
+              margin-bottom: 0.8rem;
+              padding-bottom: 0.8rem;
+            }
+            .menu-item-media {
+              min-height: 164px;
+            }
+            .menu-item-footer {
+              gap: 0.5rem;
             }
           }
         `,
