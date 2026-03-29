@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ShoppingCart, Truck, Instagram, Facebook } from 'lucide-react';
 
 const brandLogo = '/images/Naati Dosa Logo-01.png';
 
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
+    if (!isHomePage) {
+      setActiveSection(location.pathname === '/menu' ? 'menu' : 'home');
+      return undefined;
+    }
+
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -70% 0px',
@@ -25,20 +33,59 @@ const Navbar = () => {
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions);
-    const sections = ['home', 'about', 'menu', 'gallery', 'reviews', 'events', 'visit'];
+    const sections = ['home', 'about', 'gallery', 'reviews', 'events', 'visit'];
     sections.forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [isHomePage, location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname === '/menu') {
+      setActiveSection('menu');
+      return;
+    }
+
+    if (location.pathname === '/' && location.hash) {
+      setActiveSection(location.hash.replace('#', ''));
+      return;
+    }
+
+    if (location.pathname === '/') {
+      setActiveSection('home');
+    }
+  }, [location.hash, location.pathname]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+    setIsMenuOpen(false);
+    setActiveSection(id);
+  };
+
+  const navigateToSection = (id: string) => {
+    if (id === 'menu') {
+      navigate('/menu');
+      setIsMenuOpen(false);
+      setActiveSection('menu');
+      return;
+    }
+
+    if (isHomePage) {
+      scrollToSection(id);
+      return;
+    }
+
+    if (id === 'home') {
+      navigate('/');
+    } else {
+      navigate({ pathname: '/', hash: `#${id}` });
+    }
+
     setIsMenuOpen(false);
     setActiveSection(id);
   };
@@ -55,7 +102,15 @@ const Navbar = () => {
   return (
     <nav className="sticky-nav">
       <div className="container nav-content">
-        <Link to="/" className="brand-group" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setIsMenuOpen(false); }}>
+        <Link
+          to="/"
+          className="brand-group"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setIsMenuOpen(false);
+            setActiveSection('home');
+          }}
+        >
           <img src={brandLogo} alt="Naati Dosa Logo" className="nav-brand-logo" />
         </Link>
 
@@ -64,7 +119,7 @@ const Navbar = () => {
           {menuItems.map(item => (
             <button
               key={item.id}
-              onClick={() => scrollToSection(item.id)}
+              onClick={() => navigateToSection(item.id)}
               className={activeSection === item.id ? 'active' : ''}
             >
               {item.label}
@@ -108,7 +163,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.05 }}
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => navigateToSection(item.id)}
                     className={activeSection === item.id ? 'active' : ''}
                   >
                     {item.label}
@@ -121,7 +176,7 @@ const Navbar = () => {
                   <button onClick={() => { window.dispatchEvent(new Event('openOrderPopup')); setIsMenuOpen(false); }} className="btn-order full-btn">
                     Order Online
                   </button>
-                  <button onClick={() => { scrollToSection('visit'); setIsMenuOpen(false); }} className="full-btn secondary">
+                  <button onClick={() => navigateToSection('visit')} className="full-btn secondary">
                     Find Our Truck
                   </button>
                 </div>

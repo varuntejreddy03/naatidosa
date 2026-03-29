@@ -4,9 +4,11 @@ import {
   ArrowRight, Star, MapPin, MousePointerClick,
   ChevronRight, Clock, Calendar, Instagram,
   Facebook, Twitter, Mail, Phone, ExternalLink,
-  X, MessageCircle, ArrowUp
+  MessageCircle, ArrowUp
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import OrderPopup from '../components/OrderPopup';
+import { useOrderPopup } from '../hooks/useOrderPopup';
 
 // Images
 const heroDosa = '/images/hero_dosa_idli_platter.png';
@@ -19,186 +21,16 @@ const g3 = '/images/g3.png';
 const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
-const DEFAULT_MENU_IMAGE = '/plaindosa.jpg';
-
-const menuImageMap: Record<number, string> = {
-  101: '/plaindosa.jpg',
-  102: '/eggdosa.jpg',
-  103: '/gheekharamdosa.jpg',
-  104: '/Ghee%20Pudi%20Dosa.jpg',
-  105: '/Set%20Dosa.jpg',
-  106: '/Cheeze%20Dosa.jpg',
-  107: '/Onion%20Dosa.jpg',
-  108: '/Cheeze%20Dosa.jpg',
-
-  201: '/Benne%20Dosa.jpg',
-  202: '/Mysore%20Masala%20Dosa.jpg',
-  203: '/Pudina%20Dosa.jpg',
-
-  301: '/Chef%27s%20Special%20Dosa.jpg',
-
-  401: '/thatte%20idli.jpg',
-  402: '/gheepodiidli.jpg',
-  403: '/gheepodiidli.jpg',
-  404: '/sambar%20idli.jpg',
-
-  501: '/mini%20idli%20ghee%20podi.jpg',
-  502: '/Ghee%20Pudi%20Chitti%20Idli.jpg',
-  503: '/Ghee%20Karam%20Chitti%20Idli.jpg',
-  504: '/sambar%20idli.jpg',
-
-  601: '/pani%20puri.jpg',
-  602: '/masala%20puri.jpg',
-  603: '/dahi%20puri.jpg',
-  604: '/bhel%20puri.jpg',
-  605: '/samosa%20chaat.jpg',
-  606: '/samosa%20chaat.jpg',
-  607: '/mirchi%20bajji.jpg',
-  608: '/samosa%20chaat.jpg',
-
-  701: '/bhel%20puri.jpg',
-
-  801: '/chikku%20shake.jpg',
-  802: '/falooda.jpg',
-  803: '/fresh%20lime%20soda.jpg',
-  804: '/tea.jpg',
-  805: '/south%20indian%20filter%20coffee.jpg',
-
-  901: '/Bun%20Maska.jpg',
-
-  1001: '/chicken%20momos.jpg',
-  1002: '/veg%20momos.jpg',
-
-  1101: '/chicken%20puff%20bakery.jpg',
-  1102: '/chicken%20puff%20bakery.jpg',
-  1103: '/Paneer%20Puff.jpg',
-
-  1201: '/mirchi%20bajji.jpg',
-  1202: '/Egg%20Bajji.jpg',
-};
-
 const reviewsData = [
   { id: 1, name: "Varun Reddy", text: "The most authentic Dosa I've had in Florida. The Mysore Masala is a must-try! Spicy and flavorful.", rating: 5, date: "2 days ago" },
   { id: 2, name: "Sarah J.", text: "Softest Idlis ever! Their food truck is such a vibe in Delray Beach. Friendly service too!", rating: 5, date: "1 week ago" },
   { id: 3, name: "Rahul S.", text: "The Benne Dosa took me straight back to Davangere. Absolutely delicious and crispy!", rating: 5, date: "3 days ago" },
 ];
-function getMenuImage(itemId: number) {
-  return menuImageMap[itemId] || DEFAULT_MENU_IMAGE;
-}
-
-function MenuCard({
-  item,
-  onSelect,
-}: {
-  item: { id: number; name: string; desc: string; price: string };
-  onSelect?: (itemName: string) => void;
-}) {
-  const img = getMenuImage(item.id);
-  return (
-    <div
-      className="menu-pos-card"
-      role="button"
-      tabIndex={0}
-      onClick={() => onSelect?.(item.name)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelect?.(item.name);
-        }
-      }}
-      aria-label={`Order ${item.name}`}
-    >
-      <div className="menu-pos-card-left">
-        <span className="menu-pos-name">{item.name}</span>
-        <span className="menu-pos-price">{item.price}</span>
-        <span className="menu-pos-desc">{item.desc}</span>
-      </div>
-      <div className="menu-pos-card-right">
-        <img
-          src={img}
-          alt={item.name}
-          className="menu-pos-img"
-          onError={(e) => {
-            e.currentTarget.src = DEFAULT_MENU_IMAGE;
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-const menuCategories = {
-  "Dosa": [
-    { id: 101, name: "Plain Dosa", desc: "Crispy thin rice & lentil crepe.", price: "$9.99" },
-    { id: 102, name: "Egg Dosa", desc: "Topped with spiced beaten eggs.", price: "$12.49" },
-    { id: 103, name: "Ghee Karam Dosa", desc: "Spicy karam podi with pure ghee.", price: "$11.99" },
-    { id: 104, name: "Ghee Pudi Dosa", desc: "Crispy dosa with gunpowder & ghee.", price: "$11.99" },
-    { id: 105, name: "Set Dosa", desc: "Soft, spongy thick dosas (3 pcs).", price: "$11.99" },
-    { id: 106, name: "Cheeze Dosa", desc: "Melting cheese blend inside.", price: "$13.49" },
-    { id: 107, name: "Onion Dosa", desc: "Crispy dosa with caramelised onions.", price: "$11.49" },
-    { id: 108, name: "Paneer Dosa", desc: "Spiced cottage cheese filling.", price: "$13.99" },
-  ],
-  "Karnataka Specials": [
-    { id: 201, name: "Benne Dosa", desc: "Davangere style butter dosa.", price: "$12.99" },
-    { id: 202, name: "Mysore Masala Dosa", desc: "Spicy red chutney & potato filling.", price: "$13.99" },
-    { id: 203, name: "Pudina Dosa", desc: "Fresh mint and green herb dosa.", price: "$11.49" },
-  ],
-  "Chef's Special Dosa": [
-    { id: 301, name: "Chef's Special Dosa", desc: "Ask your server for today's special.", price: "$15.99" },
-  ],
-  "Idli": [
-    { id: 401, name: "Thatte Idli", desc: "Plate-sized soft steamed cake.", price: "$6.99" },
-    { id: 402, name: "Ghee Pudi Thatte Idli", desc: "With ghee and spicy podi.", price: "$7.99" },
-    { id: 403, name: "Ghee Karam Thatte Idli", desc: "Thatte idli with karam & ghee.", price: "$7.99" },
-    { id: 404, name: "Sambar Thatte Idli", desc: "Served with rich lentil sambar.", price: "$7.49" },
-  ],
-  "Guntur Specials": [
-    { id: 501, name: "Chitti Idli", desc: "Bite-sized mini steamed idlis.", price: "$7.99" },
-    { id: 502, name: "Ghee Pudi Chitti Idli", desc: "Mini idlis tossed in ghee & podi.", price: "$8.99" },
-    { id: 503, name: "Ghee Karam Chitti Idli", desc: "Mini idlis with spicy karam ghee.", price: "$8.99" },
-    { id: 504, name: "Sambar Idli", desc: "Soft idlis dunked in sambar.", price: "$7.49" },
-  ],
-  "Chats": [
-    { id: 601, name: "Pani Puri", desc: "Crispy puris with spiced water.", price: "$8.99" },
-    { id: 602, name: "Masala Puri", desc: "Crushed puris with hot peas gravy.", price: "$8.99" },
-    { id: 603, name: "Dahi Puri", desc: "Sweet yogurt and tangy chutneys.", price: "$9.99" },
-    { id: 604, name: "Bhel Puri", desc: "Puffed rice mixed with chutneys.", price: "$8.49" },
-    { id: 605, name: "Samosa Chat", desc: "Crispy samosa with chaat toppings.", price: "$9.49" },
-    { id: 606, name: "Samosa Dahi Chat", desc: "Samosa with yogurt & chutneys.", price: "$9.99" },
-    { id: 607, name: "Bajji Chat", desc: "Fritters topped with chaat masala.", price: "$8.99" },
-    { id: 608, name: "Aloo Samosa", desc: "Classic potato-filled pastry.", price: "$3.99" },
-  ],
-  "Vizag Specials": [
-    { id: 701, name: "Muri Mixture", desc: "Puffed rice with spicy Vizag masala.", price: "$7.99" },
-  ],
-  "Drinks": [
-    { id: 801, name: "Chikku Shake", desc: "Creamy sapota milkshake.", price: "$5.99" },
-    { id: 802, name: "Falooda", desc: "Layered rose & vermicelli dessert drink.", price: "$8.99" },
-    { id: 803, name: "Fresh Lime Soda", desc: "Chilled lime with soda & salt.", price: "$3.99" },
-    { id: 804, name: "Tea", desc: "Hand-crafted aromatic spiced tea.", price: "$3.49" },
-    { id: 805, name: "Filter Coffee", desc: "Traditional South Indian coffee.", price: "$3.99" },
-  ],
-  "Hyderabadi Specials": [
-    { id: 901, name: "Bun Maska", desc: "Soft bun with generous butter.", price: "$4.99" },
-  ],
-  "Momos": [
-    { id: 1001, name: "Chicken Momos", desc: "Juicy steamed chicken dumplings.", price: "$11.99" },
-    { id: 1002, name: "Veg Momos", desc: "Steamed vegetable dumplings.", price: "$10.99" },
-  ],
-  "Puffs": [
-    { id: 1101, name: "Chicken Puff", desc: "Flaky pastry with spiced chicken.", price: "$4.49" },
-    { id: 1102, name: "Egg Puff", desc: "Classic bakery style egg pastry.", price: "$3.99" },
-    { id: 1103, name: "Paneer Puff", desc: "Savory paneer masala filling.", price: "$4.49" },
-  ],
-  "Bajji": [
-    { id: 1201, name: "Mirchi Bajji", desc: "Reg / Stuffed / Cut chili fritters.", price: "$7.99" },
-    { id: 1202, name: "Egg Bajji", desc: "Boiled egg halves in chickpea batter.", price: "$8.49" },
-  ],
-};
 
 const LandingPage = () => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { closePopup, selectedMenuItem, showPopup } = useOrderPopup(location.hash ? undefined : 1500);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -210,18 +42,17 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(true);
-    }, 1500);
+    if (!location.hash) {
+      return undefined;
+    }
 
-    const handleOpenPopup = () => setShowPopup(true);
-    window.addEventListener('openOrderPopup', handleOpenPopup);
+    const hashTarget = location.hash.replace('#', '');
+    const timerId = window.setTimeout(() => {
+      document.getElementById(hashTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
 
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('openOrderPopup', handleOpenPopup);
-    };
-  }, []);
+    return () => window.clearTimeout(timerId);
+  }, [location.hash]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -230,55 +61,17 @@ const LandingPage = () => {
     }
   };
 
-  const handleMenuItemSelect = (itemName: string) => {
-    setSelectedMenuItem(itemName);
-    setShowPopup(true);
-  };
-
   return (
     <div className="landing-page">
-      {/* Order Online Popup */}
-      <AnimatePresence>
-        {showPopup && (
-          <motion.div
-            className="order-popup-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="order-popup"
-              initial={{ scale: 0.8, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            >
-              <button className="close-popup" onClick={() => setShowPopup(false)}>
-                <X size={24} />
-              </button>
-              <div className="popup-header">
-                <img src={logo01} alt="Logo" className="popup-logo" />
-                <h3>{selectedMenuItem ? `${selectedMenuItem}` : 'Order Online Now'}</h3>
-                <p>Hot, crispy, and authentic South Indian food delivered to your door.</p>
-              </div>
-              <div className="popup-options">
-                <a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" className="popup-btn dd centered">
-                  <span>Order on DoorDash</span>
-                </a>
-                <a href="https://www.ubereats.com" target="_blank" rel="noopener noreferrer" className="popup-btn ue centered">
-                  <span>Order on UberEats</span>
-                </a>
-                <div className="popup-divider">
-                  <span>OR</span>
-                </div>
-                <button onClick={() => { setShowPopup(false); scrollToSection('visit'); }} className="popup-btn dine">
-                  <MapPin size={24} />
-                  <span>Pickup at Truck</span>
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <OrderPopup
+        show={showPopup}
+        selectedMenuItem={selectedMenuItem}
+        onClose={closePopup}
+        onPickup={() => {
+          closePopup();
+          scrollToSection('visit');
+        }}
+      />
 
       {/* Floating WhatsApp Button */}
       <a
@@ -333,7 +126,7 @@ const LandingPage = () => {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="hero-cta-group"
             >
-              <button onClick={() => scrollToSection('menu')} className="cta-primary">
+              <button onClick={() => navigate('/menu')} className="cta-primary">
                 Explore Menu <ChevronRight size={20} />
               </button>
               <button onClick={() => scrollToSection('visit')} className="cta-secondary">
@@ -431,47 +224,6 @@ const LandingPage = () => {
               </div>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Menu Section */}
-      <section id="menu" className="menu-section-pos">
-        <div className="menu-pos-header">
-          <span className="sub-tag">The Menu</span>
-          <h2 className="text-brown" style={{fontSize:'2.8rem', margin:'0.3rem 0 0.5rem'}}>Crispy Golden <span className="text-orange italic">Treasures</span></h2>
-          <p style={{color:'var(--espresso)', opacity:0.6, fontSize:'1rem'}}>Authentic recipes from our family to yours. Fresh every day.</p>
-        </div>
-        <div className="menu-pos-body">
-          <nav className="menu-pos-sidebar">
-            {Object.keys(menuCategories).map((cat) => (
-              <a
-                key={cat}
-                href={`#cat-${cat.replace(/\s+/g,'-')}`}
-                className="menu-sidebar-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(`cat-${cat.replace(/\s+/g,'-')}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-              >
-                {cat}
-              </a>
-            ))}
-          </nav>
-          <div className="menu-pos-content">
-            {Object.entries(menuCategories).map(([category, items]) => (
-              <div key={category} id={`cat-${category.replace(/\s+/g,'-')}`} className="menu-pos-category">
-                <div className="menu-pos-cat-heading">
-                  <span>{category}</span>
-                  <div className="menu-pos-cat-underline" />
-                </div>
-                <div className="menu-pos-grid">
-                  {items.map((item) => (
-                    <MenuCard key={item.id} item={item} onSelect={handleMenuItemSelect} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -705,7 +457,7 @@ const LandingPage = () => {
               <ul className="f-links">
                 <li><button onClick={() => scrollToSection('home')}>Home</button></li>
                 <li><button onClick={() => scrollToSection('about')}>Our Story</button></li>
-                <li><button onClick={() => scrollToSection('menu')}>The Menu</button></li>
+                <li><button onClick={() => navigate('/menu')}>The Menu</button></li>
                 <li><button onClick={() => scrollToSection('gallery')}>Gallery</button></li>
                 <li><button onClick={() => scrollToSection('reviews')}>Reviews</button></li>
                 <li><button onClick={() => scrollToSection('events')}>Events</button></li>
