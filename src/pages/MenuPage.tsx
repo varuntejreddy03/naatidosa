@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Search, Sparkles } from 'lucide-react';
+import { Clock3, MapPin, Plus, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import OrderPopup from '../components/OrderPopup';
 import {
@@ -17,8 +17,6 @@ type MenuSection = {
   items: MenuItem[];
   slug: string;
 };
-
-const previewItemIds = [107, 202, 404];
 
 const MenuPage = () => {
   const navigate = useNavigate();
@@ -79,13 +77,12 @@ const MenuPage = () => {
           return;
         }
 
-        const nextActive = visibleSections[0].target.id.replace('menu-', '');
-        setActiveCategory(nextActive);
+        setActiveCategory(visibleSections[0].target.id.replace('menu-', ''));
       },
       {
         root: null,
-        rootMargin: '-140px 0px -55% 0px',
-        threshold: [0.1, 0.3, 0.6],
+        rootMargin: '-180px 0px -55% 0px',
+        threshold: [0.12, 0.3, 0.65],
       },
     );
 
@@ -101,15 +98,7 @@ const MenuPage = () => {
   }, [filteredSections]);
 
   const totalItemCount = allSections.reduce((count, section) => count + section.items.length, 0);
-  const browseTarget = activeCategory || filteredSections[0]?.slug || allSections[0]?.slug || '';
-
-  const previewItems = allSections
-    .flatMap((section) =>
-      section.items
-        .filter((item) => previewItemIds.includes(item.id))
-        .map((item) => ({ category: section.category, item })),
-    )
-    .sort((a, b) => previewItemIds.indexOf(a.item.id) - previewItemIds.indexOf(b.item.id));
+  const visibleItemCount = filteredSections.reduce((count, section) => count + section.items.length, 0);
 
   const handleCategoryClick = (slug: string) => {
     setActiveCategory(slug);
@@ -120,7 +109,7 @@ const MenuPage = () => {
       return;
     }
 
-    const navOffset = window.innerWidth <= 1100 ? 96 : 122;
+    const navOffset = window.innerWidth <= 900 ? 110 : 156;
     const top = targetSection.getBoundingClientRect().top + window.scrollY - navOffset;
 
     window.scrollTo({
@@ -141,95 +130,65 @@ const MenuPage = () => {
         }}
       />
 
-      <section className="menu-page-hero">
-        <div className="container menu-page-hero-grid">
+      <section className="menu-order-shell">
+        <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-            className="menu-page-copy"
+            transition={{ duration: 0.5 }}
+            className="menu-order-top"
           >
-            <span className="menu-pill">Naati Dosa Menu</span>
-            <h1>
-              Bigger cards, clearer descriptions, same <span>menu data</span>.
-            </h1>
-            <p>
-              This page keeps the current items and pricing, but presents them in a dedicated menu layout with fuller
-              explanations so first-time guests understand what they are ordering.
-            </p>
+            <div className="menu-order-intro">
+              <span className="menu-order-kicker">Naati Dosa Menu</span>
+              <h1>Scan the menu faster.</h1>
+              <p>
+                This layout keeps the same dishes and pricing, but presents them like a modern ordering menu with quick
+                category jumps, shorter cards, and side-by-side images.
+              </p>
 
-            <div className="menu-page-actions">
-              <button type="button" className="menu-hero-primary" onClick={() => handleCategoryClick(browseTarget)}>
-                Browse Menu <ArrowRight size={18} />
-              </button>
-              <button type="button" className="menu-hero-secondary" onClick={() => openPopup()}>
-                Order Online
-              </button>
+              <div className="menu-order-status-row">
+                <span className="menu-order-status">
+                  <span className="menu-order-status-dot" />
+                  Fresh daily
+                </span>
+                <span className="menu-order-note">
+                  <MapPin size={16} />
+                  Delray Beach, FL
+                </span>
+                <span className="menu-order-note">
+                  <Clock3 size={16} />
+                  Pickup menu
+                </span>
+              </div>
             </div>
 
-            <div className="menu-page-stats">
-              <div>
-                <strong>{totalItemCount}+</strong>
-                <span>Menu items</span>
+            <div className="menu-order-summary">
+              <div className="menu-order-stat">
+                <strong>{visibleItemCount}</strong>
+                <span>{normalizedQuery ? 'Matching items' : 'Visible now'}</span>
               </div>
-              <div>
+              <div className="menu-order-stat">
+                <strong>{totalItemCount}</strong>
+                <span>Total menu items</span>
+              </div>
+              <div className="menu-order-stat">
                 <strong>{allSections.length}</strong>
                 <span>Categories</span>
               </div>
-              <div>
-                <strong>Fresh daily</strong>
-                <span>House batter, chutney, sambar</span>
-              </div>
+              <button type="button" className="menu-summary-action" onClick={() => openPopup()}>
+                Start order
+              </button>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 32 }}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.1 }}
-            className="menu-preview-panel"
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="menu-toolbar"
           >
-            <div className="menu-preview-header">
-              <div>
-                <span className="preview-kicker">Guest Favorites</span>
-                <h2>What new customers usually ask about first</h2>
-              </div>
-              <Sparkles size={18} />
-            </div>
-
-            <div className="menu-preview-list">
-              {previewItems.map(({ category, item }) => (
-                <article key={item.id} className="menu-preview-card">
-                  <img
-                    src={getMenuImage(item.id)}
-                    alt={item.name}
-                    onError={(event) => {
-                      event.currentTarget.src = '/plaindosa.jpg';
-                    }}
-                  />
-                  <div>
-                    <div className="menu-preview-topline">
-                      <span>{category}</span>
-                      <strong>{item.price}</strong>
-                    </div>
-                    <h3>{item.name}</h3>
-                    <p>{getExpandedMenuDescription(category, item)}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="menu-board">
-        <div className="container menu-board-shell">
-          <aside className="menu-board-sidebar">
-            <div className="menu-search-card">
-              <label htmlFor="menu-search" className="menu-search-label">
-                Search Menu
-              </label>
-              <div className="menu-search-input-wrap">
+            <div className="menu-toolbar-main">
+              <label htmlFor="menu-search" className="menu-search-input-wrap">
                 <Search size={18} />
                 <input
                   id="menu-search"
@@ -238,42 +197,43 @@ const MenuPage = () => {
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search dosa, idli, coffee..."
                 />
-              </div>
-              <p>Search by item name, category, or description.</p>
-            </div>
+              </label>
 
-            <div className="menu-category-card">
-              <div className="menu-category-title-row">
-                <h3>Categories</h3>
-                <span>{filteredSections.length}</span>
-              </div>
-
-              <div className="menu-category-list">
-                {filteredSections.map((section) => (
-                  <button
-                    key={section.slug}
-                    type="button"
-                    className={activeCategory === section.slug ? 'active' : ''}
-                    onClick={() => handleCategoryClick(section.slug)}
-                  >
-                    <span>{section.category}</span>
-                    <strong>{section.items.length}</strong>
-                  </button>
-                ))}
+              <div className="menu-toolbar-pills" aria-label="Order details">
+                <span className="menu-toolbar-pill active">Pickup</span>
+                <span className="menu-toolbar-pill">Made fresh</span>
+                <span className="menu-toolbar-pill">
+                  <MapPin size={16} />
+                  Truck location
+                </span>
+                <span className="menu-toolbar-pill">
+                  <Clock3 size={16} />
+                  Order anytime
+                </span>
               </div>
             </div>
 
-            <div className="menu-sidebar-note">
-              <MapPin size={18} />
-              <p>Pickup is available from the truck in Delray Beach, FL.</p>
+            <div className="menu-category-strip" aria-label="Menu categories">
+              {filteredSections.map((section) => (
+                <button
+                  key={section.slug}
+                  type="button"
+                  className={activeCategory === section.slug ? 'active' : ''}
+                  onClick={() => handleCategoryClick(section.slug)}
+                  aria-pressed={activeCategory === section.slug}
+                >
+                  <span>{section.category}</span>
+                  <strong>{section.items.length}</strong>
+                </button>
+              ))}
             </div>
-          </aside>
+          </motion.div>
 
           <div className="menu-board-content">
             {filteredSections.length === 0 && (
               <div className="menu-empty-state">
                 <h2>No matching menu items</h2>
-                <p>Try a simpler search like “dosa”, “idli”, or “coffee”.</p>
+                <p>Try a simpler search like "dosa", "idli", or "coffee".</p>
               </div>
             )}
 
@@ -285,19 +245,17 @@ const MenuPage = () => {
                 ref={(node) => {
                   sectionRefs.current[section.slug] = node;
                 }}
-                initial={{ opacity: 0, y: 26 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.45, delay: sectionIndex * 0.04 }}
+                transition={{ duration: 0.42, delay: sectionIndex * 0.03 }}
               >
                 <div className="menu-group-heading">
                   <div>
                     <span>{section.category}</span>
-                    <h2>{section.items.length} items in this section</h2>
+                    <h2>{section.items.length} dishes</h2>
                   </div>
-                  <p>
-                    Larger cards and longer copy help customers understand the dish style before they order.
-                  </p>
+                  <p>Short descriptions, fast pricing, and image-led cards designed for quicker browsing.</p>
                 </div>
 
                 <div className="menu-group-grid">
@@ -307,7 +265,22 @@ const MenuPage = () => {
                       type="button"
                       className="menu-item-card"
                       onClick={() => openPopup(item.name)}
+                      aria-label={`Order ${item.name}`}
                     >
+                      <div className="menu-item-copy">
+                        <div className="menu-item-title-block">
+                          <h3>{item.name}</h3>
+                          <strong>{item.price}</strong>
+                        </div>
+                        <p>{item.desc}</p>
+                        <div className="menu-item-footer">
+                          <span className="menu-item-tag">{section.category}</span>
+                          <span className="menu-item-add" aria-hidden="true">
+                            <Plus size={18} />
+                          </span>
+                        </div>
+                      </div>
+
                       <div className="menu-item-media">
                         <img
                           src={getMenuImage(item.id)}
@@ -316,21 +289,6 @@ const MenuPage = () => {
                             event.currentTarget.src = '/plaindosa.jpg';
                           }}
                         />
-                      </div>
-
-                      <div className="menu-item-copy">
-                        <div className="menu-item-eyebrow">
-                          <span>{section.category}</span>
-                        </div>
-                        <div className="menu-item-title-row">
-                          <h3>{item.name}</h3>
-                          <strong>{item.price}</strong>
-                        </div>
-                        <p>{getExpandedMenuDescription(section.category, item)}</p>
-                        <div className="menu-item-meta">
-                          <span>{section.category}</span>
-                          <span>Tap to order</span>
-                        </div>
                       </div>
                     </button>
                   ))}
@@ -345,560 +303,485 @@ const MenuPage = () => {
         dangerouslySetInnerHTML={{
           __html: `
           .menu-page {
-            background:
-              radial-gradient(circle at top left, rgba(240,165,0,0.14), transparent 28%),
-              linear-gradient(180deg, #221208 0%, #130905 38%, #0C0603 100%);
-            color: #FFF6EA;
             min-height: calc(100vh - 100px);
+            background:
+              radial-gradient(circle at top right, rgba(240,165,0,0.18), transparent 26%),
+              radial-gradient(circle at top left, rgba(107,58,31,0.08), transparent 24%),
+              linear-gradient(180deg, #FDF6EC 0%, #FFF8F1 48%, #F6EBDD 100%);
+            color: var(--espresso);
           }
-          .menu-page-hero {
-            padding: 56px 0 40px;
+          .menu-order-shell {
+            padding: 32px 0 72px;
           }
-          .menu-page-hero-grid {
+          .menu-order-top {
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-            gap: 2rem;
-            align-items: stretch;
+            grid-template-columns: minmax(0, 1.25fr) 340px;
+            gap: 1rem;
+            margin-bottom: 1rem;
           }
-          .menu-page-copy,
-          .menu-preview-panel,
-          .menu-search-card,
-          .menu-category-card,
-          .menu-sidebar-note,
+          .menu-order-intro,
+          .menu-order-summary,
+          .menu-toolbar,
           .menu-group,
           .menu-empty-state {
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.04);
-            box-shadow: 0 24px 50px rgba(0,0,0,0.18);
-            backdrop-filter: blur(14px);
+            background: rgba(255,255,255,0.74);
+            border: 1px solid rgba(107,58,31,0.1);
+            box-shadow: 0 20px 44px rgba(107,58,31,0.08);
+            backdrop-filter: blur(12px);
           }
-          .menu-page-copy {
-            border-radius: 34px;
-            padding: 3rem;
+          .menu-order-intro {
+            border-radius: 30px;
+            padding: 2rem 2.2rem;
           }
-          .menu-pill {
+          .menu-order-kicker {
             display: inline-flex;
             align-items: center;
-            padding: 0.45rem 0.9rem;
+            padding: 0.45rem 0.8rem;
             border-radius: 999px;
-            background: rgba(240,165,0,0.16);
-            border: 1px solid rgba(240,165,0,0.35);
-            color: #FFD289;
-            font-size: 0.82rem;
+            background: rgba(240,165,0,0.12);
+            color: var(--brown);
+            font-size: 0.8rem;
             font-weight: 800;
             letter-spacing: 0.12em;
             text-transform: uppercase;
           }
-          .menu-page-copy h1 {
-            font-size: clamp(3rem, 5vw, 4.9rem);
+          .menu-order-intro h1 {
+            margin-top: 0.9rem;
+            font-size: clamp(2.7rem, 5vw, 4.5rem);
             line-height: 0.92;
-            margin: 1.35rem 0 1rem;
-            color: #FFF7ED;
+            color: var(--espresso);
           }
-          .menu-page-copy h1 span {
-            color: var(--orange);
-            font-style: italic;
+          .menu-order-intro p {
+            max-width: 56ch;
+            margin-top: 1rem;
+            font-size: 1.02rem;
+            line-height: 1.75;
+            color: rgba(62,31,8,0.72);
           }
-          .menu-page-copy p {
-            max-width: 58ch;
-            font-size: 1.08rem;
-            line-height: 1.8;
-            color: rgba(255,246,234,0.74);
-          }
-          .menu-page-actions {
+          .menu-order-status-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.75rem;
+            margin-top: 1.6rem;
           }
-          .menu-hero-primary,
-          .menu-hero-secondary {
+          .menu-order-status,
+          .menu-order-note {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            padding: 1rem 1.4rem;
-            border-radius: 18px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
+            gap: 0.55rem;
+            padding: 0.7rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(107,58,31,0.05);
+            border: 1px solid rgba(107,58,31,0.1);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: rgba(62,31,8,0.82);
           }
-          .menu-hero-primary {
-            background: linear-gradient(135deg, var(--orange) 0%, #F6B93B 100%);
-            color: #2C1709;
+          .menu-order-status {
+            background: rgba(240,165,0,0.12);
+            border-color: rgba(240,165,0,0.26);
+            color: var(--brown);
           }
-          .menu-hero-secondary {
-            background: transparent;
-            color: #FFF1D8;
-            border: 1px solid rgba(255,255,255,0.18);
+          .menu-order-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #3BB273;
+            box-shadow: 0 0 0 4px rgba(59,178,115,0.12);
           }
-          .menu-page-stats {
+          .menu-order-note svg {
+            width: 16px;
+            height: 16px;
+            color: var(--brown);
+          }
+          .menu-order-summary {
+            border-radius: 30px;
+            padding: 1.2rem;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1rem;
-            margin-top: 2.25rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem;
+            align-content: start;
           }
-          .menu-page-stats div {
-            padding: 1rem 1.1rem;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
+          .menu-order-stat {
+            padding: 1rem;
+            border-radius: 22px;
+            background: rgba(253,246,236,0.9);
+            border: 1px solid rgba(107,58,31,0.08);
           }
-          .menu-page-stats strong {
+          .menu-order-stat strong {
             display: block;
-            font-size: 1.1rem;
-            color: #FFF4E0;
+            font-size: 1.8rem;
+            line-height: 1;
+            color: var(--brown);
           }
-          .menu-page-stats span {
+          .menu-order-stat span {
             display: block;
             margin-top: 0.35rem;
-            font-size: 0.9rem;
-            color: rgba(255,246,234,0.62);
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: rgba(62,31,8,0.66);
           }
-          .menu-preview-panel {
-            border-radius: 34px;
-            padding: 2rem;
-          }
-          .menu-preview-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            color: #FFD289;
-          }
-          .preview-kicker {
-            display: inline-block;
-            margin-bottom: 0.55rem;
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(255,210,137,0.8);
-          }
-          .menu-preview-header h2 {
-            font-size: 1.7rem;
-            line-height: 1.1;
-            color: #FFF4E0;
-          }
-          .menu-preview-list {
-            display: grid;
-            gap: 1rem;
-          }
-          .menu-preview-card {
-            display: grid;
-            grid-template-columns: 122px minmax(0, 1fr);
-            gap: 1.1rem;
-            align-items: stretch;
-            padding: 1.15rem;
-            border-radius: 28px;
-            background: linear-gradient(180deg, rgba(103,67,31,0.92) 0%, rgba(84,52,23,0.96) 100%);
-            border: 1px solid rgba(255,210,137,0.12);
-          }
-          .menu-preview-card img {
-            width: 122px;
-            height: 122px;
-            object-fit: cover;
-            border-radius: 22px;
-          }
-          .menu-preview-topline {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.8rem;
-            margin-bottom: 0.45rem;
-          }
-          .menu-preview-card span {
-            display: inline-block;
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #FFCC7A;
-          }
-          .menu-preview-topline strong {
+          .menu-summary-action {
+            grid-column: 1 / -1;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.38rem 0.7rem;
-            border-radius: 999px;
-            background: rgba(255,210,137,0.12);
-            color: #FFF1D8;
-            font-size: 0.88rem;
+            width: 100%;
+            padding: 1rem 1.1rem;
+            border-radius: 20px;
+            background: var(--brown);
+            color: var(--cream);
+            font-family: var(--font-body);
+            font-size: 0.94rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
           }
-          .menu-preview-card h3 {
-            font-size: 1.5rem;
-            line-height: 1.1;
-            color: #FFF7ED;
+          .menu-summary-action:hover {
+            background: var(--espresso);
+            transform: translateY(-2px);
           }
-          .menu-preview-card p {
-            margin-top: 0.55rem;
-            font-size: 0.96rem;
-            line-height: 1.72;
-            color: rgba(255,246,234,0.78);
-          }
-          .menu-board {
-            padding: 0 0 72px;
-          }
-          .menu-board-shell {
-            display: grid;
-            grid-template-columns: 290px minmax(0, 1fr);
-            gap: 1.4rem;
-            align-items: start;
-          }
-          .menu-board-sidebar {
+          .menu-toolbar {
             position: sticky;
-            top: 118px;
-            display: grid;
-            gap: 1rem;
-            max-height: calc(100vh - 136px);
-            overflow-y: auto;
-            padding-right: 0.35rem;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,210,137,0.28) transparent;
+            top: 112px;
+            z-index: 12;
+            border-radius: 30px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(253,246,236,0.92);
           }
-          .menu-board-sidebar::-webkit-scrollbar {
-            width: 6px;
-          }
-          .menu-board-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255,210,137,0.24);
-            border-radius: 999px;
-          }
-          .menu-search-card,
-          .menu-category-card,
-          .menu-sidebar-note {
-            border-radius: 28px;
-            padding: 1.25rem;
-          }
-          .menu-search-label,
-          .menu-category-title-row h3 {
-            display: block;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #FFD289;
+          .menu-toolbar-main {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.9rem;
           }
           .menu-search-input-wrap {
             display: flex;
             align-items: center;
             gap: 0.7rem;
+            flex: 1 1 320px;
             padding: 0.95rem 1rem;
-            border-radius: 16px;
-            background: rgba(12,6,3,0.55);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,246,234,0.55);
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid rgba(107,58,31,0.1);
+            color: rgba(62,31,8,0.48);
+          }
+          .menu-search-input-wrap svg {
+            width: 18px;
+            height: 18px;
+            color: rgba(107,58,31,0.58);
+            flex-shrink: 0;
           }
           .menu-search-input-wrap input {
             width: 100%;
-            background: transparent;
             border: none;
             outline: none;
-            color: #FFF6EA;
+            background: transparent;
+            color: var(--espresso);
             font-size: 0.98rem;
             font-family: var(--font-body);
           }
           .menu-search-input-wrap input::placeholder {
-            color: rgba(255,246,234,0.35);
+            color: rgba(62,31,8,0.38);
           }
-          .menu-search-card p,
-          .menu-sidebar-note p {
-            margin-top: 0.8rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: rgba(255,246,234,0.62);
-          }
-          .menu-category-title-row {
+          .menu-toolbar-pills {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
           }
-          .menu-category-title-row span {
+          .menu-toolbar-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.82rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(107,58,31,0.05);
+            border: 1px solid rgba(107,58,31,0.1);
+            color: rgba(62,31,8,0.78);
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+          }
+          .menu-toolbar-pill.active {
+            background: var(--brown);
+            border-color: var(--brown);
+            color: var(--cream);
+          }
+          .menu-toolbar-pill svg {
+            width: 16px;
+            height: 16px;
+          }
+          .menu-category-strip {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-top: 1rem;
+            scrollbar-width: none;
+          }
+          .menu-category-strip::-webkit-scrollbar {
+            display: none;
+          }
+          .menu-category-strip button {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.82rem 1rem;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid rgba(107,58,31,0.1);
+            color: var(--espresso);
+            font-family: var(--font-body);
+            font-size: 0.93rem;
+            font-weight: 700;
+          }
+          .menu-category-strip button strong {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 34px;
-            height: 34px;
-            padding: 0 0.7rem;
+            min-width: 30px;
+            height: 30px;
+            padding: 0 0.55rem;
             border-radius: 999px;
-            background: rgba(240,165,0,0.16);
-            color: #FFD289;
-            font-size: 0.84rem;
-            font-weight: 800;
-          }
-          .menu-category-list {
-            display: grid;
-            gap: 0.6rem;
-            margin-top: 0.9rem;
-            max-height: 52vh;
-            overflow-y: auto;
-            padding-right: 0.25rem;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,210,137,0.24) transparent;
-          }
-          .menu-category-list::-webkit-scrollbar {
-            width: 6px;
-          }
-          .menu-category-list::-webkit-scrollbar-thumb {
-            background: rgba(255,210,137,0.22);
-            border-radius: 999px;
-          }
-          .menu-category-list button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: rgba(255,246,234,0.74);
-            text-align: left;
-          }
-          .menu-category-list button.active,
-          .menu-category-list button:hover {
-            transform: translateX(4px);
-            border-color: rgba(240,165,0,0.38);
             background: rgba(240,165,0,0.12);
-            color: #FFF5DF;
+            color: var(--brown);
+            font-size: 0.82rem;
           }
-          .menu-category-list button span {
-            font-size: 0.96rem;
-            font-weight: 700;
+          .menu-category-strip button.active,
+          .menu-category-strip button:hover {
+            background: rgba(240,165,0,0.14);
+            border-color: rgba(240,165,0,0.36);
+            color: var(--brown);
+            transform: translateY(-1px);
           }
-          .menu-category-list button strong {
-            font-size: 0.86rem;
-            color: #FFD289;
-          }
-          .menu-sidebar-note {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            color: #FFD289;
+          .menu-category-strip button.active strong,
+          .menu-category-strip button:hover strong {
+            background: var(--brown);
+            color: var(--cream);
           }
           .menu-board-content {
             display: grid;
             gap: 1rem;
           }
-          .menu-group,
-          .menu-empty-state {
-            border-radius: 34px;
-            padding: 1.6rem;
-            scroll-margin-top: 136px;
+          .menu-empty-state,
+          .menu-group {
+            border-radius: 30px;
+            padding: 1.35rem;
+            scroll-margin-top: 176px;
           }
           .menu-empty-state {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 3rem 1.5rem;
           }
           .menu-empty-state h2 {
-            font-size: 2rem;
-            color: #FFF4E0;
+            font-size: 1.9rem;
+            color: var(--espresso);
           }
           .menu-empty-state p {
             margin-top: 0.75rem;
-            color: rgba(255,246,234,0.68);
+            color: rgba(62,31,8,0.68);
           }
           .menu-group-heading {
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
             gap: 1rem;
-            margin-bottom: 1.35rem;
+            margin-bottom: 1.1rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(107,58,31,0.1);
           }
           .menu-group-heading span {
-            display: inline-block;
-            font-size: 0.8rem;
+            display: block;
+            font-size: 0.78rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: #FFD289;
+            color: var(--brown);
           }
           .menu-group-heading h2 {
-            margin-top: 0.4rem;
-            font-size: 2rem;
-            color: #FFF4E0;
+            margin-top: 0.35rem;
+            font-size: 1.9rem;
+            line-height: 1.05;
+            color: var(--espresso);
           }
           .menu-group-heading p {
-            max-width: 36ch;
+            max-width: 34ch;
             font-size: 0.95rem;
-            line-height: 1.65;
-            color: rgba(255,246,234,0.6);
+            line-height: 1.6;
+            color: rgba(62,31,8,0.62);
           }
           .menu-group-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1rem;
           }
           .menu-item-card {
             display: grid;
-            grid-template-columns: 170px minmax(0, 1fr);
-            gap: 1.35rem;
-            min-height: 240px;
-            padding: 1.5rem;
-            border-radius: 34px;
-            background: linear-gradient(180deg, rgba(103,67,31,0.94) 0%, rgba(85,53,24,0.98) 100%);
-            border: 1px solid rgba(255,210,137,0.12);
-            color: #FFF6EA;
+            grid-template-columns: minmax(0, 1fr) 152px;
+            gap: 1rem;
+            min-height: 190px;
+            padding: 1rem;
+            border-radius: 24px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(250,244,236,0.98) 100%);
+            border: 1px solid rgba(107,58,31,0.1);
+            color: var(--espresso);
             text-align: left;
+            font-family: var(--font-body);
+            box-shadow: 0 12px 28px rgba(107,58,31,0.07);
           }
           .menu-item-card:hover {
             transform: translateY(-3px);
-            border-color: rgba(255,210,137,0.22);
-            box-shadow: 0 26px 52px rgba(0,0,0,0.24);
-          }
-          .menu-item-media img {
-            width: 100%;
-            height: 170px;
-            object-fit: cover;
-            border-radius: 26px;
+            border-color: rgba(240,165,0,0.35);
+            box-shadow: 0 18px 34px rgba(107,58,31,0.12);
           }
           .menu-item-copy {
             display: flex;
             flex-direction: column;
             min-width: 0;
           }
-          .menu-item-eyebrow {
-            margin-bottom: 0.75rem;
+          .menu-item-title-block h3 {
+            font-size: 1.45rem;
+            line-height: 1.08;
+            color: var(--espresso);
           }
-          .menu-item-eyebrow span {
-            display: inline-block;
-            font-size: 0.82rem;
+          .menu-item-title-block strong {
+            display: block;
+            margin-top: 0.35rem;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
             font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #FFCC7A;
+            color: var(--brown);
           }
-          .menu-item-title-row {
+          .menu-item-copy p {
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: rgba(62,31,8,0.68);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .menu-item-footer {
             display: flex;
-            align-items: flex-start;
+            align-items: flex-end;
             justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 0.95rem;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 1rem;
           }
-          .menu-item-title-row h3 {
-            font-size: 1.95rem;
-            line-height: 1.05;
-            color: #FFF7ED;
+          .menu-item-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.45rem 0.78rem;
+            border-radius: 999px;
+            background: rgba(240,165,0,0.12);
+            color: var(--brown);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
           }
-          .menu-item-title-row strong {
+          .menu-item-add {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem 0.95rem;
-            border-radius: 999px;
-            background: rgba(255,210,137,0.12);
-            color: #FFF1D8;
-            font-size: 1rem;
-            white-space: nowrap;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--brown);
+            color: var(--cream);
+            box-shadow: 0 10px 18px rgba(107,58,31,0.18);
+            flex-shrink: 0;
           }
-          .menu-item-copy p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: rgba(255,246,234,0.82);
+          .menu-item-media {
+            min-height: 158px;
+            height: 100%;
           }
-          .menu-item-meta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.65rem;
-            justify-content: space-between;
-            margin-top: auto;
-            padding-top: 1.2rem;
-            font-size: 0.82rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #FFD289;
+          .menu-item-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+            background: rgba(107,58,31,0.08);
           }
           @media (max-width: 1200px) {
-            .menu-page-hero-grid,
-            .menu-board-shell,
+            .menu-order-top,
             .menu-group-grid {
               grid-template-columns: 1fr;
-            }
-            .menu-board-sidebar {
-              position: static;
             }
           }
           @media (max-width: 900px) {
             .menu-page {
               min-height: calc(100vh - 80px);
             }
-            .menu-page-copy,
-            .menu-preview-panel,
+            .menu-order-shell {
+              padding-top: 24px;
+            }
+            .menu-toolbar {
+              top: 84px;
+            }
+            .menu-order-intro,
+            .menu-order-summary,
+            .menu-toolbar,
             .menu-group,
             .menu-empty-state {
-              border-radius: 28px;
+              border-radius: 24px;
             }
-            .menu-board-sidebar {
-              max-height: none;
-              overflow: visible;
-              padding-right: 0;
-            }
-            .menu-category-list {
-              max-height: none;
-              overflow: visible;
-            }
-            .menu-page-copy {
-              padding: 2rem;
-            }
-            .menu-page-stats {
-              grid-template-columns: 1fr;
+            .menu-order-intro {
+              padding: 1.6rem;
             }
             .menu-group-heading {
-              align-items: flex-start;
               flex-direction: column;
+              align-items: flex-start;
             }
             .menu-item-card {
-              grid-template-columns: 1fr;
-              min-height: 0;
-            }
-            .menu-item-media img {
-              height: 230px;
-            }
-            .menu-item-title-row {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-            .menu-item-title-row h3 {
-              font-size: 1.65rem;
+              grid-template-columns: minmax(0, 1fr) 140px;
             }
           }
           @media (max-width: 640px) {
-            .menu-page-hero {
-              padding-top: 30px;
+            .menu-order-intro h1 {
+              font-size: 2.4rem;
             }
-            .menu-page-copy h1 {
-              font-size: 2.7rem;
-            }
-            .menu-preview-card {
+            .menu-order-summary {
               grid-template-columns: 1fr;
             }
-            .menu-preview-card img {
-              width: 100%;
-              height: 220px;
+            .menu-toolbar {
+              padding: 0.9rem;
             }
-            .menu-search-card,
-            .menu-category-card,
-            .menu-sidebar-note,
-            .menu-group,
-            .menu-empty-state {
+            .menu-toolbar-main {
+              flex-direction: column;
+              align-items: stretch;
+            }
+            .menu-search-input-wrap {
+              flex-basis: auto;
+            }
+            .menu-toolbar-pills {
+              overflow-x: auto;
+              flex-wrap: nowrap;
+              padding-bottom: 0.15rem;
+              scrollbar-width: none;
+            }
+            .menu-toolbar-pills::-webkit-scrollbar {
+              display: none;
+            }
+            .menu-empty-state,
+            .menu-group {
               padding: 1rem;
-              border-radius: 24px;
             }
             .menu-group-heading h2 {
-              font-size: 1.6rem;
+              font-size: 1.55rem;
             }
-            .menu-item-title-row h3 {
-              font-size: 1.45rem;
+            .menu-item-card {
+              grid-template-columns: 1fr;
             }
-            .menu-item-copy p {
-              font-size: 1rem;
+            .menu-item-media {
+              order: -1;
+              min-height: 190px;
+            }
+            .menu-item-title-block h3 {
+              font-size: 1.28rem;
             }
           }
         `,
