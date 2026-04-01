@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Clock3, MapPin, Plus, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Plus, Search, Leaf, Wheat } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import OrderPopup from '../components/OrderPopup';
 import {
-  getExpandedMenuDescription,
   getMenuCategorySlug,
+  getMenuExplainer,
   getMenuImage,
   menuCategories,
   type MenuItem,
@@ -18,11 +18,16 @@ type MenuSection = {
   slug: string;
 };
 
+type DietFilter = 'none' | 'vegan' | 'gf';
+
 const MenuPage = () => {
   const navigate = useNavigate();
   const { closePopup, openPopup, selectedMenuItem, showPopup } = useOrderPopup();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [dietFilter, setDietFilter] = useState<DietFilter>('none');
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const categoryStripRef = useRef<HTMLDivElement>(null);
 
   const allSections: MenuSection[] = Object.entries(menuCategories).map(([category, items]) => ({
     category,
@@ -36,20 +41,23 @@ const MenuPage = () => {
     .map((section) => ({
       ...section,
       items: section.items.filter((item) => {
-        if (!normalizedQuery) {
-          return true;
-        }
-
-        const haystack = [
+        // Search term filter
+        const matchesSearch = !normalizedQuery || [
           section.category,
           item.name,
           item.desc,
-          getExpandedMenuDescription(section.category, item),
         ]
           .join(' ')
-          .toLowerCase();
+          .toLowerCase()
+          .includes(normalizedQuery);
 
-        return haystack.includes(normalizedQuery);
+        if (!matchesSearch) return false;
+
+        // Diet filter
+        if (dietFilter === 'vegan') return !!item.isVegan;
+        if (dietFilter === 'gf') return !!item.isGlutenFree;
+
+        return true;
       }),
     }))
     .filter((section) => section.items.length > 0);
@@ -95,10 +103,7 @@ const MenuPage = () => {
     });
 
     return () => observer.disconnect();
-  }, [filteredSections]);
-
-  const totalItemCount = allSections.reduce((count, section) => count + section.items.length, 0);
-  const visibleItemCount = filteredSections.reduce((count, section) => count + section.items.length, 0);
+  }, [filteredSections, dietFilter]);
 
   const handleCategoryClick = (slug: string) => {
     setActiveCategory(slug);
@@ -109,13 +114,28 @@ const MenuPage = () => {
       return;
     }
 
-    const navOffset = window.innerWidth <= 900 ? 110 : 156;
+    const navOffset = 180;
     const top = targetSection.getBoundingClientRect().top + window.scrollY - navOffset;
 
     window.scrollTo({
       top,
       behavior: 'smooth',
     });
+  };
+
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (categoryStripRef.current) {
+      const scrollAmount = 200;
+      categoryStripRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const toggleDietFilter = (filter: DietFilter) => {
+    setDietFilter(dietFilter === filter ? 'none' : filter);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -130,110 +150,112 @@ const MenuPage = () => {
         }}
       />
 
-      <section className="menu-order-shell">
+      <header className="menu-sticky-header">
         <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="menu-order-top"
-          >
-            <div className="menu-order-intro">
-              <span className="menu-order-kicker">Naati Dosa Menu</span>
-              <h1>Scan the menu faster.</h1>
-              <p>
-                This layout keeps the same dishes and pricing, but presents them like a modern ordering menu with quick
-                category jumps, shorter cards, and side-by-side images.
-              </p>
-
-              <div className="menu-order-status-row">
-                <span className="menu-order-status">
-                  <span className="menu-order-status-dot" />
-                  Fresh daily
-                </span>
-                <span className="menu-order-note">
-                  <MapPin size={16} />
-                  Delray Beach, FL
-                </span>
-                <span className="menu-order-note">
-                  <Clock3 size={16} />
-                  Pickup menu
-                </span>
-              </div>
-            </div>
-
-            <div className="menu-order-summary">
-              <div className="menu-order-stat">
-                <strong>{visibleItemCount}</strong>
-                <span>{normalizedQuery ? 'Matching items' : 'Visible now'}</span>
-              </div>
-              <div className="menu-order-stat">
-                <strong>{totalItemCount}</strong>
-                <span>Total menu items</span>
-              </div>
-              <div className="menu-order-stat">
-                <strong>{allSections.length}</strong>
-                <span>Categories</span>
-              </div>
-              <button type="button" className="menu-summary-action" onClick={() => openPopup()}>
-                Start order
+          <div className="menu-nav-row">
+            <div className="nav-actions">
+              <button 
+                type="button" 
+                className={`nav-btn ${showSearch ? 'active' : ''}`} 
+                onClick={() => setShowSearch(!showSearch)}
+                aria-label="Search"
+              >
+                <Search size={20} />
+              </button>
+              <button 
+                type="button" 
+                className="nav-btn" 
+                onClick={() => navigate('/')}
+                aria-label="Back"
+              >
+                <ChevronLeft size={24} />
               </button>
             </div>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08 }}
-            className="menu-toolbar"
-          >
-            <div className="menu-toolbar-main">
-              <label htmlFor="menu-search" className="menu-search-input-wrap">
-                <Search size={18} />
+            <div className="category-container">
+              <button className="scroll-btn left" onClick={() => scrollCategories('left')}>
+                <ChevronLeft size={16} />
+              </button>
+              
+              <div className="menu-category-strip" ref={categoryStripRef} aria-label="Menu categories">
+                <button 
+                  type="button" 
+                  className={`diet-pill vegan ${dietFilter === 'vegan' ? 'active' : ''}`}
+                  onClick={() => toggleDietFilter('vegan')}
+                >
+                  <Leaf size={14} /> Vegan
+                </button>
+                <button 
+                  type="button" 
+                  className={`diet-pill gf ${dietFilter === 'gf' ? 'active' : ''}`}
+                  onClick={() => toggleDietFilter('gf')}
+                >
+                  <Wheat size={14} /> Gluten Free
+                </button>
+                <div className="v-divider"></div>
+                {filteredSections.map((section) => (
+                  <button
+                    key={section.slug}
+                    type="button"
+                    className={activeCategory === section.slug ? 'active' : ''}
+                    onClick={() => handleCategoryClick(section.slug)}
+                    aria-pressed={activeCategory === section.slug}
+                  >
+                    <span>{section.category.split('(')[0].trim()}</span>
+                  </button>
+                ))}
+              </div>
+
+              <button className="scroll-btn right" onClick={() => scrollCategories('right')}>
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {showSearch && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="search-overlay"
+              >
                 <input
-                  id="menu-search"
+                  autoFocus
                   type="text"
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search dosa, idli, coffee..."
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search for dosa, idli, chutneys..."
+                  className="search-input"
                 />
-              </label>
+              </motion.div>
+            )}
+            
+            {dietFilter !== 'none' && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="filter-banner"
+              >
+                <span>Viewing <strong>{dietFilter === 'vegan' ? 'Vegan Only' : 'Gluten Free Only'}</strong> menu</span>
+                <button onClick={() => setDietFilter('none')}>Clear</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </header>
 
-              <div className="menu-toolbar-pills" aria-label="Order details">
-                <span className="menu-toolbar-pill active">Pickup</span>
-                <span className="menu-toolbar-pill">Made fresh</span>
-                <span className="menu-toolbar-pill">
-                  <MapPin size={16} />
-                  Truck location
-                </span>
-                <span className="menu-toolbar-pill">
-                  <Clock3 size={16} />
-                  Order anytime
-                </span>
-              </div>
-            </div>
-
-            <div className="menu-category-strip" aria-label="Menu categories">
-              {filteredSections.map((section) => (
-                <button
-                  key={section.slug}
-                  type="button"
-                  className={activeCategory === section.slug ? 'active' : ''}
-                  onClick={() => handleCategoryClick(section.slug)}
-                  aria-pressed={activeCategory === section.slug}
-                >
-                  <span>{section.category}</span>
-                  <strong>{section.items.length}</strong>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
+      <section className="menu-list-shell">
+        <div className="container">
           <div className="menu-board-content">
             {filteredSections.length === 0 && (
               <div className="menu-empty-state">
                 <h2>No matching menu items</h2>
-                <p>Try a simpler search like "dosa", "idli", or "coffee".</p>
+                <p>Try changing your diet filters or search term.</p>
+                <button onClick={() => { setSearchTerm(''); setDietFilter('none'); }} className="clear-filters">
+                  Clear All Filters
+                </button>
               </div>
             )}
 
@@ -247,15 +269,14 @@ const MenuPage = () => {
                 }}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.42, delay: sectionIndex * 0.03 }}
               >
                 <div className="menu-group-heading">
-                  <div>
-                    <span>{section.category}</span>
-                    <h2>{section.items.length} dishes</h2>
-                  </div>
-                  <p>Short descriptions, fast pricing, and image-led cards designed for quicker browsing.</p>
+                  <h2 className="serif-font">{section.category}</h2>
+                  {getMenuExplainer(section.category) && (
+                    <p className="category-explainer">{getMenuExplainer(section.category)}</p>
+                  )}
                 </div>
 
                 <div className="menu-group-grid">
@@ -270,14 +291,18 @@ const MenuPage = () => {
                       <div className="menu-item-copy">
                         <div className="menu-item-title-block">
                           <h3>{item.name}</h3>
-                          <strong>{item.price}</strong>
+                          <div className="price-badge">{item.price}</div>
                         </div>
-                        <p>{item.desc}</p>
-                        <div className="menu-item-footer">
-                          <span className="menu-item-tag">{section.category}</span>
-                          <span className="menu-item-add" aria-hidden="true">
-                            <Plus size={18} />
-                          </span>
+
+                        <div className="dietary-badges-row">
+                          {item.isVegan && <span className="badge-v2 vegan" title="Vegan">V</span>}
+                          {item.isGlutenFree && <span className="badge-v2 gf" title="Gluten Free">GF</span>}
+                        </div>
+
+                        <p className="menu-item-desc">{item.desc}</p>
+                        
+                        <div className="menu-item-add" aria-hidden="true">
+                          <Plus size={18} />
                         </div>
                       </div>
 
@@ -303,645 +328,371 @@ const MenuPage = () => {
         dangerouslySetInnerHTML={{
           __html: `
           .menu-page {
-            min-height: calc(100vh - 100px);
-            background:
-              radial-gradient(circle at top right, rgba(240,165,0,0.18), transparent 26%),
-              radial-gradient(circle at top left, rgba(107,58,31,0.08), transparent 24%),
-              linear-gradient(180deg, #FDF6EC 0%, #FFF8F1 48%, #F6EBDD 100%);
+            min-height: 100vh;
+            background: var(--cream);
             color: var(--espresso);
+            padding-bottom: 80px;
           }
-          .menu-page,
-          .menu-page .container,
-          .menu-order-shell,
-          .menu-order-top,
-          .menu-order-intro,
-          .menu-order-summary,
-          .menu-toolbar,
-          .menu-toolbar-main,
-          .menu-search-input-wrap,
-          .menu-toolbar-pills,
-          .menu-category-strip,
-          .menu-board-content,
-          .menu-group,
-          .menu-group-grid,
-          .menu-item-card,
-          .menu-item-copy,
-          .menu-item-media {
-            min-width: 0;
-            max-width: 100%;
+
+          .menu-sticky-header {
+            position: sticky;
+            top: 100px;
+            z-index: 100;
+            background: rgba(253, 246, 236, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(107, 58, 31, 0.1);
+            transition: top 0.3s ease;
           }
-          .menu-page .container {
-            padding-left: clamp(0.95rem, 2.4vw, 2rem);
-            padding-right: clamp(0.95rem, 2.4vw, 2rem);
-          }
-          .menu-order-shell {
-            padding: 32px 0 72px;
-          }
-          .menu-order-top {
-            display: grid;
-            grid-template-columns: minmax(0, 1.25fr) 340px;
-            gap: 1rem;
-            margin-bottom: 1rem;
-          }
-          .menu-order-intro,
-          .menu-order-summary,
-          .menu-toolbar,
-          .menu-group,
-          .menu-empty-state {
-            background: rgba(255,255,255,0.74);
-            border: 1px solid rgba(107,58,31,0.1);
-            box-shadow: 0 20px 44px rgba(107,58,31,0.08);
-            backdrop-filter: blur(12px);
-            overflow: hidden;
-          }
-          .menu-order-intro {
-            border-radius: 30px;
-            padding: 2rem 2.2rem;
-          }
-          .menu-order-kicker {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.45rem 0.8rem;
-            border-radius: 999px;
-            background: rgba(240,165,0,0.12);
-            color: var(--brown);
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-          }
-          .menu-order-intro h1 {
-            margin-top: 0.9rem;
-            font-size: clamp(2.7rem, 5vw, 4.5rem);
-            line-height: 0.92;
-            color: var(--espresso);
-          }
-          .menu-order-intro p {
-            max-width: 56ch;
-            margin-top: 1rem;
-            font-size: 1.02rem;
-            line-height: 1.75;
-            color: rgba(62,31,8,0.72);
-          }
-          .menu-order-status-row {
+
+          .menu-nav-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1.6rem;
-          }
-          .menu-order-status,
-          .menu-order-note {
-            display: inline-flex;
             align-items: center;
-            gap: 0.55rem;
-            padding: 0.7rem 0.95rem;
-            border-radius: 999px;
-            background: rgba(107,58,31,0.05);
-            border: 1px solid rgba(107,58,31,0.1);
-            font-size: 0.92rem;
-            font-weight: 600;
-            color: rgba(62,31,8,0.82);
+            gap: 1.5rem;
           }
-          .menu-order-status {
-            background: rgba(240,165,0,0.12);
-            border-color: rgba(240,165,0,0.26);
-            color: var(--brown);
+
+          .nav-actions {
+            display: flex;
+            gap: 0.5rem;
           }
-          .menu-order-status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: #3BB273;
-            box-shadow: 0 0 0 4px rgba(59,178,115,0.12);
-          }
-          .menu-order-note svg {
-            width: 16px;
-            height: 16px;
-            color: var(--brown);
-          }
-          .menu-order-summary {
-            border-radius: 30px;
-            padding: 1.2rem;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.85rem;
-            align-content: start;
-          }
-          .menu-order-stat {
-            padding: 1rem;
-            border-radius: 22px;
-            background: rgba(253,246,236,0.9);
-            border: 1px solid rgba(107,58,31,0.08);
-          }
-          .menu-order-stat strong {
-            display: block;
-            font-size: 1.8rem;
-            line-height: 1;
-            color: var(--brown);
-          }
-          .menu-order-stat span {
-            display: block;
-            margin-top: 0.35rem;
-            font-size: 0.88rem;
-            line-height: 1.45;
-            color: rgba(62,31,8,0.66);
-          }
-          .menu-summary-action {
-            grid-column: 1 / -1;
-            display: inline-flex;
+
+          .nav-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 1rem 1.1rem;
-            border-radius: 20px;
-            background: var(--brown);
-            color: var(--cream);
-            font-family: var(--font-body);
-            font-size: 0.94rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-          }
-          .menu-summary-action:hover {
-            background: var(--espresso);
-            transform: translateY(-2px);
-          }
-          .menu-toolbar {
-            position: sticky;
-            top: 112px;
-            z-index: 12;
-            border-radius: 30px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: rgba(253,246,236,0.92);
-          }
-          .menu-toolbar-main {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.9rem;
-          }
-          .menu-search-input-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            flex: 1 1 320px;
-            width: 100%;
-            padding: 0.95rem 1rem;
-            border-radius: 18px;
+            border-radius: 12px;
             background: #fff;
-            border: 1px solid rgba(107,58,31,0.1);
-            color: rgba(62,31,8,0.48);
+            border: 1px solid rgba(107, 58, 31, 0.1);
+            color: var(--brown);
+            transition: 0.2s;
           }
-          .menu-search-input-wrap svg {
-            width: 18px;
-            height: 18px;
-            color: rgba(107,58,31,0.58);
-            flex-shrink: 0;
+
+          .nav-btn:hover, .nav-btn.active {
+            background: var(--brown);
+            color: #fff;
+            border-color: var(--brown);
+            transform: translateY(-1px);
           }
-          .menu-search-input-wrap input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            color: var(--espresso);
-            font-size: 0.98rem;
-            font-family: var(--font-body);
-          }
-          .menu-search-input-wrap input::placeholder {
-            color: rgba(62,31,8,0.38);
-          }
-          .menu-toolbar-pills {
+
+          .category-container {
+            flex: 1;
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            min-width: 0;
-          }
-          .menu-toolbar-pill {
-            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.82rem 0.95rem;
-            border-radius: 999px;
-            background: rgba(107,58,31,0.05);
-            border: 1px solid rgba(107,58,31,0.1);
-            color: rgba(62,31,8,0.78);
-            font-size: 0.9rem;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
+            min-width: 0;
+            position: relative;
           }
-          .menu-toolbar-pill.active {
-            background: var(--brown);
-            border-color: var(--brown);
-            color: var(--cream);
-          }
-          .menu-toolbar-pill svg {
-            width: 16px;
-            height: 16px;
-          }
+
           .menu-category-strip {
             display: flex;
+            align-items: center;
             gap: 0.75rem;
-            width: 100%;
             overflow-x: auto;
-            padding-top: 1rem;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
-            overscroll-behavior-x: contain;
+            padding: 4px 0;
           }
+
           .menu-category-strip::-webkit-scrollbar {
             display: none;
           }
-          .menu-category-strip button {
-            flex: 0 0 auto;
-            display: inline-flex;
+
+          .diet-pill {
+            display: flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.82rem 1rem;
-            border-radius: 999px;
+            gap: 6px;
+            padding: 0.6rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            border: 1.5px solid transparent;
             background: #fff;
-            border: 1px solid rgba(107,58,31,0.1);
-            color: var(--espresso);
-            font-family: var(--font-body);
-            font-size: 0.93rem;
-            font-weight: 700;
           }
-          .menu-category-strip button strong {
-            display: inline-flex;
+
+          .diet-pill.vegan { color: #2D6A4F; border-color: #2D6A4F; }
+          .diet-pill.vegan.active { background: #2D6A4F; color: #fff; }
+          
+          .diet-pill.gf { color: #B08968; border-color: #B08968; }
+          .diet-pill.gf.active { background: #B08968; color: #fff; }
+
+          .v-divider {
+            width: 1.5px;
+            height: 24px;
+            background: rgba(107, 58, 31, 0.1);
+            margin: 0 4px;
+            flex-shrink: 0;
+          }
+
+          .menu-category-strip button:not(.diet-pill) {
+            flex-shrink: 0;
+            padding: 0.7rem 1.4rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--espresso);
+            font-size: 0.88rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(107, 58, 31, 0.1);
+          }
+
+          .menu-category-strip button:not(.diet-pill).active {
+            background: var(--brown);
+            color: #fff;
+            border-color: var(--brown);
+            box-shadow: 0 8px 20px rgba(107, 58, 31, 0.2);
+          }
+
+          .scroll-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 30px;
-            height: 30px;
-            padding: 0 0.55rem;
-            border-radius: 999px;
-            background: rgba(240,165,0,0.12);
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid rgba(107, 58, 31, 0.1);
             color: var(--brown);
-            font-size: 0.82rem;
+            cursor: pointer;
+            z-index: 2;
           }
-          .menu-category-strip button.active,
-          .menu-category-strip button:hover {
-            background: rgba(240,165,0,0.14);
-            border-color: rgba(240,165,0,0.36);
-            color: var(--brown);
-            transform: translateY(-1px);
+
+          .search-overlay {
+            margin-top: 1rem;
+            overflow: hidden;
           }
-          .menu-category-strip button.active strong,
-          .menu-category-strip button:hover strong {
-            background: var(--brown);
-            color: var(--cream);
+
+          .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            border: 1px solid rgba(107, 58, 31, 0.2);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 4px 20px rgba(107, 58, 31, 0.05);
           }
-          .menu-board-content {
-            display: grid;
-            gap: 1rem;
+
+          .menu-list-shell {
+            padding: 3rem 0;
           }
-          .menu-empty-state,
-          .menu-group {
-            border-radius: 30px;
-            padding: 1.35rem;
-            scroll-margin-top: 176px;
-          }
+
           .menu-empty-state {
             text-align: center;
-            padding: 3rem 1.5rem;
+            padding: 4rem 1rem;
           }
-          .menu-empty-state h2 {
-            font-size: 1.9rem;
-            color: var(--espresso);
+
+          .clear-filters {
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
+            background: var(--brown);
+            color: #fff;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
           }
-          .menu-empty-state p {
-            margin-top: 0.75rem;
-            color: rgba(62,31,8,0.68);
+
+          .menu-group {
+            margin-bottom: 4rem;
+            scroll-margin-top: 200px;
           }
+
           .menu-group-heading {
+            margin-bottom: 2.5rem;
             display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 1.1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(107,58,31,0.1);
-            min-width: 0;
+            flex-direction: column;
+            align-items: flex-start;
           }
-          .menu-group-heading span {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--brown);
-          }
+
           .menu-group-heading h2 {
-            margin-top: 0.35rem;
-            font-size: 1.9rem;
-            line-height: 1.05;
-            color: var(--espresso);
+            font-size: 2.2rem;
+            color: var(--brown);
+            margin-bottom: 0.25rem;
           }
-          .menu-group-heading p {
-            max-width: 34ch;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: rgba(62,31,8,0.62);
+
+          .serif-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
           }
+
+          .category-explainer {
+            font-size: 1rem;
+            color: #6B3A1F;
+            max-width: 600px;
+            line-height: 1.5;
+            margin-bottom: 0;
+            opacity: 0.8;
+          }
+
+          .heading-underline {
+            width: 60px;
+            height: 3px;
+            background: var(--orange);
+            margin-top: 0.5rem;
+            border-radius: 2px;
+          }
+
           .menu-group-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
           }
+
           .menu-item-card {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 152px;
+            display: flex;
             gap: 1rem;
-            min-height: 190px;
-            padding: 1rem;
-            border-radius: 24px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(250,244,236,0.98) 100%);
-            border: 1px solid rgba(107,58,31,0.1);
-            color: var(--espresso);
+            padding: 1.5rem;
+            border-radius: 20px;
+            background: #fff;
+            border: 1px solid rgba(107, 58, 31, 0.08);
             text-align: left;
-            font-family: var(--font-body);
-            box-shadow: 0 12px 28px rgba(107,58,31,0.07);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(107, 58, 31, 0.03);
+            position: relative;
+            min-height: 160px;
           }
+
           .menu-item-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(240,165,0,0.35);
-            box-shadow: 0 18px 34px rgba(107,58,31,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(107, 58, 31, 0.1);
+            border-color: rgba(107, 58, 31, 0.2);
           }
+
           .menu-item-copy {
+            flex: 1;
             display: flex;
             flex-direction: column;
             min-width: 0;
+            padding-right: 20px;
           }
+
           .menu-item-title-block h3 {
-            font-size: 1.45rem;
-            line-height: 1.08;
-            color: var(--espresso);
-          }
-          .menu-item-title-block strong {
-            display: block;
-            margin-top: 0.35rem;
-            font-family: var(--font-body);
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            color: var(--brown);
+            color: var(--espresso);
+            margin-bottom: 0.25rem;
           }
-          .menu-item-copy p {
-            margin-top: 0.8rem;
+
+          .price-badge {
+            color: var(--brown);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+          }
+
+          .dietary-badges-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 0.75rem;
+          }
+
+          .menu-item-desc {
             font-size: 0.95rem;
-            line-height: 1.65;
-            color: rgba(62,31,8,0.68);
+            color: #777;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            margin-bottom: 0.5rem;
           }
-          .menu-item-footer {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 0.75rem;
-            margin-top: auto;
-            padding-top: 1rem;
-          }
-          .menu-item-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.45rem 0.78rem;
-            border-radius: 999px;
-            background: rgba(240,165,0,0.12);
-            color: var(--brown);
-            font-size: 0.76rem;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-          }
-          .menu-item-add {
+
+          .badge-v2 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+          }
+
+          .badge-v2.vegan { background: #E9F5EE; color: #2D6A4F; border: 1px solid #C7E9D9; }
+          .badge-v2.gf { background: #F6F1EE; color: #B08968; border: 1px solid #E6D9CF; }
+
+          .menu-item-add {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(107, 58, 31, 0.05);
+            color: var(--brown);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(107, 58, 31, 0.1);
+            transition: all 0.2s;
+            z-index: 5;
+          }
+
+          .menu-item-card:hover .menu-item-add {
             background: var(--brown);
-            color: var(--cream);
-            box-shadow: 0 10px 18px rgba(107,58,31,0.18);
-            flex-shrink: 0;
+            color: white;
+            transform: scale(1.1);
           }
+
           .menu-item-media {
-            min-height: 158px;
-            height: 100%;
+            width: 140px;
+            height: 120px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 14px;
           }
+
           .menu-item-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 18px;
-            background: rgba(107,58,31,0.08);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
           }
-          @media (max-width: 1200px) {
-            .menu-order-top,
+
+          .menu-item-card:hover .menu-item-media img {
+            transform: scale(1.15);
+          }
+
+          @media (max-width: 1100px) {
+            .menu-sticky-header {
+              top: 80px;
+            }
+            .menu-group {
+              scroll-margin-top: 160px;
+            }
+          }
+
+          @media (max-width: 900px) {
             .menu-group-grid {
               grid-template-columns: 1fr;
             }
           }
-          @media (max-width: 900px) {
-            .menu-page {
-              min-height: calc(100vh - 80px);
-            }
-            .menu-order-shell {
-              padding-top: 24px;
-            }
-            .menu-toolbar {
-              top: 78px;
-            }
-            .menu-order-intro,
-            .menu-order-summary,
-            .menu-toolbar,
-            .menu-group,
-            .menu-empty-state {
-              border-radius: 24px;
-            }
-            .menu-order-intro {
-              padding: 1.6rem;
-            }
-            .menu-empty-state,
-            .menu-group {
-              scroll-margin-top: 132px;
-            }
-            .menu-group-heading {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-            .menu-item-card {
-              grid-template-columns: minmax(0, 1fr) 140px;
-            }
-          }
-          @media (max-width: 768px) {
-            .menu-order-shell {
-              padding-bottom: 56px;
-            }
-            .menu-order-intro h1 {
-              font-size: clamp(2.05rem, 9vw, 2.8rem);
-              line-height: 0.98;
-            }
-            .menu-order-intro p {
-              margin-top: 0.8rem;
-              font-size: 0.95rem;
-              line-height: 1.58;
-            }
-            .menu-order-status-row {
-              gap: 0.55rem;
-              margin-top: 1.1rem;
-            }
-            .menu-order-status,
-            .menu-order-note {
-              padding: 0.56rem 0.78rem;
-              font-size: 0.82rem;
-            }
-            .menu-toolbar {
-              top: 72px;
-            }
-            .menu-category-strip button {
-              padding: 0.68rem 0.86rem;
-              font-size: 0.84rem;
-            }
-            .menu-category-strip button strong {
-              min-width: 26px;
-              height: 26px;
-              font-size: 0.75rem;
-            }
-            .menu-empty-state,
-            .menu-group {
-              scroll-margin-top: 124px;
-            }
-            .menu-item-card {
-              grid-template-columns: minmax(0, 1fr) 120px;
-              min-height: 172px;
-              padding: 0.85rem;
-              gap: 0.7rem;
-            }
-            .menu-item-media {
-              min-height: 134px;
-            }
-            .menu-item-title-block h3 {
-              font-size: 1.16rem;
-            }
-            .menu-item-copy p {
-              margin-top: 0.55rem;
-              font-size: 0.88rem;
-              line-height: 1.5;
-              -webkit-line-clamp: 2;
-            }
-            .menu-item-footer {
-              padding-top: 0.72rem;
-            }
-          }
-          @media (max-width: 640px) {
-            .menu-page .container {
-              padding-left: 0.8rem;
-              padding-right: 0.8rem;
-            }
-            .menu-order-top {
-              gap: 0.8rem;
-            }
-            .menu-order-summary {
-              grid-template-columns: 1fr;
-            }
-            .menu-toolbar {
-              top: 68px;
-              padding: 0.78rem;
-            }
-            .menu-toolbar-main {
-              flex-direction: column;
-              align-items: stretch;
-            }
-            .menu-search-input-wrap {
-              flex-basis: auto;
-              min-width: 0;
-            }
-            .menu-toolbar-pills {
-              width: 100%;
-              overflow-x: auto;
-              flex-wrap: nowrap;
-              padding-bottom: 0.15rem;
-              scrollbar-width: none;
-              -webkit-overflow-scrolling: touch;
-              overscroll-behavior-x: contain;
-            }
-            .menu-toolbar-pills::-webkit-scrollbar {
+
+          @media (max-width: 600px) {
+            .nav-actions {
               display: none;
             }
-            .menu-category-strip {
-              padding-top: 0.85rem;
-            }
-            .menu-empty-state,
-            .menu-group {
-              padding: 1rem;
-              scroll-margin-top: 116px;
-            }
-            .menu-group-heading h2 {
-              font-size: 1.55rem;
-            }
-            .menu-group-heading p {
-              max-width: none;
-            }
             .menu-item-card {
-              grid-template-columns: 1fr;
-              min-height: 0;
+               padding: 1rem;
             }
             .menu-item-media {
-              order: -1;
-              min-height: 176px;
+              width: 90px;
+              height: 80px;
             }
-            .menu-item-title-block h3 {
-              font-size: 1.28rem;
-            }
-          }
-          @media (max-width: 480px) {
-            .menu-order-shell {
-              padding-top: 18px;
-              padding-bottom: 44px;
-            }
-            .menu-page .container {
-              padding-left: 0.7rem;
-              padding-right: 0.7rem;
-            }
-            .menu-order-intro,
-            .menu-order-summary,
-            .menu-toolbar,
-            .menu-group,
-            .menu-empty-state {
-              border-radius: 20px;
-            }
-            .menu-order-intro {
-              padding: 1.2rem;
-            }
-            .menu-order-status-row {
-              gap: 0.45rem;
-            }
-            .menu-toolbar-pill {
-              padding: 0.66rem 0.8rem;
-              font-size: 0.8rem;
-            }
-            .menu-category-strip {
-              gap: 0.55rem;
-            }
-            .menu-category-strip button {
-              padding: 0.62rem 0.75rem;
-              font-size: 0.8rem;
-            }
-            .menu-group-heading {
-              margin-bottom: 0.8rem;
-              padding-bottom: 0.8rem;
-            }
-            .menu-item-media {
-              min-height: 164px;
-            }
-            .menu-item-footer {
+            .menu-nav-row {
               gap: 0.5rem;
             }
+            .menu-group {
+              scroll-margin-top: 140px;
+            }
           }
-        `,
+          `,
         }}
       />
     </div>
