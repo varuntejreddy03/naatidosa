@@ -248,78 +248,107 @@ const MenuPage = () => {
 
       <section className="menu-list-shell">
         <div className="container">
-          <div className="menu-board-content">
-            {filteredSections.length === 0 && (
-              <div className="menu-empty-state">
-                <h2>No matching menu items</h2>
-                <p>Try changing your diet filters or search term.</p>
-                <button onClick={() => { setSearchTerm(''); setDietFilter('none'); }} className="clear-filters">
-                  Clear All Filters
-                </button>
+          <div className="menu-layout">
+            <aside className="menu-side-panel" aria-label="Browse menu categories">
+              <div className="side-search-shell">
+                <Search size={16} className="side-search-icon" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search menu"
+                  className="side-search-input"
+                />
               </div>
-            )}
 
-            {filteredSections.map((section, sectionIndex) => (
-              <motion.section
-                key={section.slug}
-                id={`menu-${section.slug}`}
-                className="menu-group"
-                ref={(node) => {
-                  sectionRefs.current[section.slug] = node;
-                }}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.42, delay: sectionIndex * 0.03 }}
-              >
-                <div className="menu-group-heading">
-                  <h2 className="serif-font">{section.category}</h2>
-                  {getMenuExplainer(section.category) && (
-                    <p className="category-explainer">{getMenuExplainer(section.category)}</p>
-                  )}
+              <nav className="side-category-list">
+                {filteredSections.map((section) => (
+                  <button
+                    key={`side-${section.slug}`}
+                    type="button"
+                    className={`side-category-btn ${activeCategory === section.slug ? 'active' : ''}`}
+                    onClick={() => handleCategoryClick(section.slug)}
+                    aria-pressed={activeCategory === section.slug}
+                  >
+                    {section.category.split('(')[0].trim()}
+                  </button>
+                ))}
+              </nav>
+            </aside>
+
+            <div className="menu-board-content">
+              {filteredSections.length === 0 && (
+                <div className="menu-empty-state">
+                  <h2>No matching menu items</h2>
+                  <p>Try changing your diet filters or search term.</p>
+                  <button onClick={() => { setSearchTerm(''); setDietFilter('none'); }} className="clear-filters">
+                    Clear All Filters
+                  </button>
                 </div>
+              )}
 
-                <div className="menu-group-grid">
-                  {section.items.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className="menu-item-card"
-                      onClick={() => openPopup(item.name)}
-                      aria-label={`Order ${item.name}`}
-                    >
-                      <div className="menu-item-copy">
-                        <div className="menu-item-title-block">
-                          <h3>{item.name}</h3>
-                          <div className="price-badge">{item.price}</div>
+              {filteredSections.map((section, sectionIndex) => (
+                <motion.section
+                  key={section.slug}
+                  id={`menu-${section.slug}`}
+                  className="menu-group"
+                  ref={(node) => {
+                    sectionRefs.current[section.slug] = node;
+                  }}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.42, delay: sectionIndex * 0.03 }}
+                >
+                  <div className="menu-group-heading">
+                    <h2 className="serif-font">{section.category}</h2>
+                    {getMenuExplainer(section.category) && (
+                      <p className="category-explainer">{getMenuExplainer(section.category)}</p>
+                    )}
+                  </div>
+
+                  <div className="menu-group-grid">
+                    {section.items.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className="menu-item-card"
+                        onClick={() => openPopup(item.name)}
+                        aria-label={`Order ${item.name}`}
+                      >
+                        <div className="menu-item-copy">
+                          <div className="menu-item-title-block">
+                            <h3>{item.name}</h3>
+                            <div className="price-badge">{item.price}</div>
+                          </div>
+
+                          <div className="dietary-badges-row">
+                            {item.isVegan && <span className="badge-v2 vegan" title="Vegan">V</span>}
+                            {item.isGlutenFree && <span className="badge-v2 gf" title="Gluten Free">GF</span>}
+                          </div>
+
+                          <p className="menu-item-desc">{item.desc}</p>
+
+                          <div className="menu-item-add" aria-hidden="true">
+                            <Plus size={18} />
+                          </div>
                         </div>
 
-                        <div className="dietary-badges-row">
-                          {item.isVegan && <span className="badge-v2 vegan" title="Vegan">V</span>}
-                          {item.isGlutenFree && <span className="badge-v2 gf" title="Gluten Free">GF</span>}
+                        <div className="menu-item-media">
+                          <img
+                            src={getMenuImage(item.id)}
+                            alt={item.name}
+                            onError={(event) => {
+                              event.currentTarget.src = '/plaindosa.jpg';
+                            }}
+                          />
                         </div>
-
-                        <p className="menu-item-desc">{item.desc}</p>
-                        
-                        <div className="menu-item-add" aria-hidden="true">
-                          <Plus size={18} />
-                        </div>
-                      </div>
-
-                      <div className="menu-item-media">
-                        <img
-                          src={getMenuImage(item.id)}
-                          alt={item.name}
-                          onError={(event) => {
-                            event.currentTarget.src = '/plaindosa.jpg';
-                          }}
-                        />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </motion.section>
-            ))}
+                      </button>
+                    ))}
+                  </div>
+                </motion.section>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -481,6 +510,99 @@ const MenuPage = () => {
 
           .menu-list-shell {
             padding: 3rem 0;
+          }
+
+          .menu-layout {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+          }
+
+          .menu-side-panel {
+            position: sticky;
+            top: 200px;
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid rgba(107, 58, 31, 0.14);
+            padding: 0.85rem;
+            max-height: calc(100vh - 220px);
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(107, 58, 31, 0.1);
+          }
+
+          .side-search-shell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            border: 1px solid rgba(107, 58, 31, 0.2);
+            border-radius: 12px;
+            padding: 0.6rem 0.7rem;
+            margin-bottom: 0.8rem;
+          }
+
+          .side-search-icon {
+            color: rgba(107, 58, 31, 0.65);
+            flex-shrink: 0;
+          }
+
+          .side-search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--espresso);
+            font-size: 0.88rem;
+          }
+
+          .side-search-input::placeholder {
+            color: rgba(107, 58, 31, 0.5);
+          }
+
+          .side-category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+            padding-right: 4px;
+          }
+
+          .side-category-list::-webkit-scrollbar {
+            width: 5px;
+          }
+
+          .side-category-list::-webkit-scrollbar-thumb {
+            background: rgba(107, 58, 31, 0.25);
+            border-radius: 999px;
+          }
+
+          .side-category-btn {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            color: var(--espresso);
+            border-radius: 10px;
+            padding: 0.5rem 0.6rem;
+            font-size: 0.93rem;
+            font-weight: 600;
+            line-height: 1.2;
+            font-family: var(--font-body);
+          }
+
+          .side-category-btn:hover {
+            background: rgba(107, 58, 31, 0.08);
+          }
+
+          .side-category-btn.active {
+            background: var(--brown);
+            color: #fff;
+            font-weight: 700;
+          }
+
+          .menu-board-content {
+            min-width: 0;
           }
 
           .menu-empty-state {
@@ -665,6 +787,12 @@ const MenuPage = () => {
             }
             .menu-group {
               scroll-margin-top: 160px;
+            }
+            .menu-layout {
+              grid-template-columns: 1fr;
+            }
+            .menu-side-panel {
+              display: none;
             }
           }
 
