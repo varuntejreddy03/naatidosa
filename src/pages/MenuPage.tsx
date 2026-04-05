@@ -153,7 +153,7 @@ const MenuPage = () => {
       <header className="menu-sticky-header">
         <div className="container">
           <div className="menu-nav-row">
-            <div className="nav-actions">
+            <div className="menu-nav-actions">
               <button 
                 type="button" 
                 className={`nav-btn ${showSearch ? 'active' : ''}`} 
@@ -380,7 +380,7 @@ const MenuPage = () => {
             gap: 1.5rem;
           }
 
-          .nav-actions {
+          .menu-nav-actions {
             display: flex;
             gap: 0.5rem;
           }
@@ -803,8 +803,29 @@ const MenuPage = () => {
           }
 
           @media (max-width: 600px) {
-            .nav-actions {
+            .menu-nav-row {
+              gap: 0.65rem;
+              flex-wrap: wrap;
+              align-items: stretch;
+            }
+            .menu-nav-actions {
+              display: flex;
+              width: auto;
+            }
+            .category-container {
+              width: 100%;
+            }
+            .scroll-btn {
               display: none;
+            }
+            .menu-category-strip {
+              gap: 0.5rem;
+              width: 100%;
+              padding: 2px 0;
+            }
+            .menu-category-strip button:not(.diet-pill) {
+              padding: 0.62rem 1rem;
+              font-size: 0.82rem;
             }
             .menu-item-card {
                padding: 1rem;
@@ -812,9 +833,6 @@ const MenuPage = () => {
             .menu-item-media {
               width: 90px;
               height: 80px;
-            }
-            .menu-nav-row {
-              gap: 0.5rem;
             }
             .menu-group {
               scroll-margin-top: 140px;
