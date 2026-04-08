@@ -200,7 +200,7 @@ const Navbar = () => {
           z-index: 1000;
           background: #FDF6EC;
           border-bottom: 1px solid rgba(107, 58, 31, 0.1);
-          height: 100px;
+          height: 82px;
           display: flex;
           align-items: center;
           transition: all 0.4s ease;
@@ -222,7 +222,7 @@ const Navbar = () => {
           text-decoration: none;
         }
         .nav-brand-logo {
-          height: 90px;
+          height: 68px;
           width: auto;
           object-fit: contain;
           filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
@@ -230,16 +230,16 @@ const Navbar = () => {
         }
         .nav-links {
           display: flex;
-          gap: 1.8rem;
+          gap: 1.5rem;
           justify-content: center;
-          margin: 0 2rem;
+          margin: 0 1.5rem;
         }
         .nav-links button {
           font-family: inherit;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 2px;
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           color: #5C3A1E;
           background: none;
           border: none;
@@ -412,16 +412,16 @@ const Navbar = () => {
         }
 
         @media (max-width: 1100px) {
-          .nav-brand-logo { height: 80px; }
+          .nav-brand-logo { height: 62px; }
           .nav-links { display: none; }
           .desktop-only { display: none; }
           .mobile-toggle { display: flex; }
-          .sticky-nav { height: 80px; }
+          .sticky-nav { height: 72px; }
         }
         @media (max-width: 768px) {
-          .nav-brand-logo { height: 75px; }
+          .nav-brand-logo { height: 58px; }
           .nav-content { padding: 0 1.2rem; }
-          .sticky-nav { height: 80px; }
+          .sticky-nav { height: 68px; }
           .drawer-links button { font-size: 2.2rem; }
         }
       `}} />

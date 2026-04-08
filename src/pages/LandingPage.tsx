@@ -21,6 +21,21 @@ const g3 = '/images/g3.png';
 const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
+const heroSlides = [
+  { src: '/images/hero-dosa.jpg', alt: 'Signature South Indian dish' },
+  { src: heroDosa, alt: 'Dosa and idli platter' },
+  { src: g1, alt: 'Crispy dosa with sides' },
+  { src: g2, alt: 'Food spread with chutneys' },
+  { src: g3, alt: 'Freshly served South Indian food' },
+];
+
+const heroFoodTiles = [
+  { src: '/menu%20images/Plain%20DOAsa.jpg', label: 'Plain Dosa' },
+  { src: '/menu%20images/Ghee%20karam%20Dosa.jpeg', label: 'Ghee Karam Dosa' },
+  { src: '/menu%20images/Thatte%20idli.webp', label: 'Thatte Idli' },
+  { src: '/menu%20images/chikoo%20shake.cms', label: 'Chikoo Shake' },
+];
+
 const reviewsData = [
   { id: 1, name: "Varun Reddy", text: "The most authentic Dosa I've had in Florida. The Mysore Masala is a must-try! Spicy and flavorful.", rating: 5, date: "2 days ago" },
   { id: 2, name: "Sarah J.", text: "Softest Idlis ever! Their food truck is such a vibe in Delray Beach. Friendly service too!", rating: 5, date: "1 week ago" },
@@ -32,6 +47,9 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { closePopup, selectedMenuItem, showPopup } = useOrderPopup(location.hash ? undefined : 1500);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+
+  const activeHeroSlide = heroSlides[heroSlideIndex];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,6 +71,14 @@ const LandingPage = () => {
 
     return () => window.clearTimeout(timerId);
   }, [location.hash]);
+
+  useEffect(() => {
+    const slideTimer = window.setInterval(() => {
+      setHeroSlideIndex((prevIndex) => (prevIndex + 1) % heroSlides.length);
+    }, 60000);
+
+    return () => window.clearInterval(slideTimer);
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -88,6 +114,22 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <section id="home" className="hero-section bg-cream">
+        <div className="hero-bg-media" aria-hidden="true">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.img
+              key={activeHeroSlide.src}
+              src={activeHeroSlide.src}
+              alt={activeHeroSlide.alt}
+              className="hero-bg-image"
+              initial={{ opacity: 0, scale: 1.03 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.9, ease: 'easeInOut' }}
+            />
+          </AnimatePresence>
+        </div>
+        <div className="hero-overlay"></div>
+
         <div className="hero-blobs">
           <div className="hero-blob blob-1"></div>
           <div className="hero-blob blob-2"></div>
@@ -102,13 +144,13 @@ const LandingPage = () => {
             >
               <div className="hero-badge">
                 <span className="badge-dot"></span>
-                <span>Now Serving Delray Beach, FL</span>
+                <span>Best Indian Food in Florida</span>
               </div>
 
               <h1 className="hero-headline">
-                <span className="line-1">Taste the</span>
-                <span className="line-2"><span className="text-stroke">Soul of</span></span>
-                <span className="line-3 text-orange italic">South India</span>
+                <span className="line-1">Savor Rich Flavors of</span>
+                <span className="line-2"><span className="text-stroke">Authentic South Indian</span></span>
+                <span className="line-3 text-orange italic">Street Food, Fresh Daily</span>
               </h1>
             </motion.div>
 
@@ -120,6 +162,26 @@ const LandingPage = () => {
             >
               Authentic South Indian dosas and soft idlis, served fresh. We're bringing the crispy, golden tradition of home right to your street.
             </motion.p>
+
+            <div className="hero-quick-badges" aria-label="Hero highlights">
+              <span>Live Dosa Counter</span>
+              <span>Fresh Chutneys</span>
+              <span>Delray Beach</span>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="hero-food-strip"
+            >
+              {heroFoodTiles.map((tile) => (
+                <div key={tile.label} className="hero-food-tile">
+                  <img src={tile.src} alt={tile.label} />
+                  <span>{tile.label}</span>
+                </div>
+              ))}
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -146,22 +208,15 @@ const LandingPage = () => {
               </div>
               <span>"Best Dosa & Idli in Florida" — Local Foodie</span>
             </motion.div>
-          </div>
 
-          <div className="hero-visual">
-            <motion.div
-              className="main-visual-container"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            >
-              <div className="visual-image-wrapper">
-                <div className="hero-image-frame">
-                  <img src={heroDosa} alt="South Indian Platter with Dosa and Idli" className="hero-main-img" />
-                </div>
-                <div className="hero-visual-decorator"></div>
-              </div>
-            </motion.div>
+            <div className="hero-slide-dots" aria-hidden="true">
+              {heroSlides.map((slide, index) => (
+                <span
+                  key={slide.src}
+                  className={`hero-slide-dot ${index === heroSlideIndex ? 'active' : ''}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -566,29 +621,33 @@ const LandingPage = () => {
         /* Hero */
         .hero-section {
           position: relative;
-          padding: 68px 0 112px;
-          min-height: 84vh;
+          padding: 34px 0 74px;
+          min-height: calc(100vh - 82px);
           display: flex;
           align-items: center;
           overflow: hidden;
           isolation: isolate;
         }
-        .hero-section::before {
-          content: '';
+        .hero-bg-media {
           position: absolute;
           inset: 0;
-          background-image: url('/images/hero-dosa.jpg');
-          background-size: cover;
-          background-position: center;
-          opacity: 0.09;
           z-index: 0;
-          transform: scale(1.03);
         }
-        .hero-section::after {
-          content: '';
+        .hero-bg-image {
           position: absolute;
           inset: 0;
-          background: linear-gradient(108deg, rgba(253,246,236,0.98) 0%, rgba(253,246,236,0.92) 50%, rgba(253,246,236,0.84) 100%);
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          transform-origin: center;
+        }
+        .hero-overlay {
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(100deg, rgba(15, 10, 6, 0.8) 0%, rgba(28, 18, 11, 0.7) 42%, rgba(45, 29, 18, 0.52) 68%, rgba(45, 29, 18, 0.38) 100%),
+            radial-gradient(circle at 84% 18%, rgba(240, 165, 0, 0.2), transparent 48%);
           z-index: 1;
         }
         .hero-blobs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
@@ -605,16 +664,25 @@ const LandingPage = () => {
           aspect-ratio: 1;
           right: -90px;
           bottom: -60px;
-          background: radial-gradient(circle, rgba(107,58,31,0.14) 0%, rgba(107,58,31,0.04) 70%, transparent 100%);
+          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 70%, transparent 100%);
         }
-        .hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: stretch; position: relative; z-index: 2; }
+        .hero-container {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          align-items: end;
+          position: relative;
+          z-index: 2;
+        }
         .hero-content {
-          background: rgba(255, 255, 255, 0.7);
-          border: 1px solid rgba(107,58,31,0.1);
-          backdrop-filter: blur(6px);
+          color: #fff;
+          max-width: 760px;
+          background: linear-gradient(160deg, rgba(255, 255, 255, 0.11) 0%, rgba(255,255,255,0.03) 70%);
+          border: 1px solid rgba(255,255,255,0.2);
+          backdrop-filter: blur(7px);
           border-radius: 28px;
-          padding: clamp(1.25rem, 2.1vw, 2rem);
-          box-shadow: 0 20px 45px rgba(107,58,31,0.1);
+          padding: clamp(1.2rem, 2.2vw, 2rem);
+          box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -626,9 +694,9 @@ const LandingPage = () => {
           width: fit-content;
           padding: 0.45rem 0.8rem;
           border-radius: 999px;
-          border: 1px solid rgba(107,58,31,0.2);
-          background: rgba(255,255,255,0.75);
-          color: var(--espresso);
+          border: 1px solid rgba(255,255,255,0.32);
+          background: rgba(0,0,0,0.25);
+          color: #fff;
           font-size: 0.92rem;
           font-weight: 700;
           margin-bottom: 1.2rem;
@@ -638,43 +706,84 @@ const LandingPage = () => {
           height: 8px;
           border-radius: 50%;
           background: var(--orange);
-          box-shadow: 0 0 0 4px rgba(240,165,0,0.18);
+          box-shadow: 0 0 0 4px rgba(240,165,0,0.26);
         }
-        .hero-headline { font-size: clamp(3rem, 6.2vw, 5.1rem); line-height: 0.95; font-weight: 900; font-style: italic; margin-bottom: 1.5rem; color: var(--brown); letter-spacing: -1.2px; text-shadow: 0 8px 25px rgba(62,31,8,0.05); }
+        .hero-headline { font-size: clamp(2.3rem, 4.5vw, 4.1rem); line-height: 0.95; font-weight: 900; font-style: italic; margin-bottom: 0.8rem; color: #fff; letter-spacing: -0.8px; text-shadow: 0 14px 30px rgba(0,0,0,0.38); }
         .hero-headline .line-1,
         .hero-headline .line-2,
         .hero-headline .line-3 { display: block; }
         .hero-headline .line-1 { margin-bottom: 0.2rem; }
         .hero-headline .line-2 { margin-bottom: 0.15rem; }
-        .text-stroke { color: var(--brown); -webkit-text-stroke: 0; }
-        .hero-description { font-size: clamp(1.05rem, 1.7vw, 1.28rem); line-height: 1.55; margin-bottom: 2rem; max-width: 560px; opacity: 0.9; }
-        .hero-cta-group { display: flex; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
-        .cta-primary { background: var(--brown); color: white; padding: 1.05rem 2rem; border-radius: 50px; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 10px 30px rgba(107,58,31,0.2); border: none; cursor: pointer; transition: 0.3s; }
-        .cta-primary:hover { background: var(--espresso); transform: translateY(-3px); }
-        .cta-secondary { background: transparent; color: var(--brown); padding: 1.05rem 2rem; border-radius: 50px; font-weight: 800; border: 2px solid var(--brown); cursor: pointer; transition: 0.3s; }
-        .cta-secondary:hover { background: var(--brown); color: white; transform: translateY(-3px); }
-
-        .hero-visual { position: relative; perspective: 1000px; }
-        .main-visual-container { width: 100%; }
-        .visual-image-wrapper { position: relative; z-index: 2; width: min(100%, 720px); margin-left: auto; border-radius: 40px; animation: hero-float 6s ease-in-out infinite; }
-        .hero-image-frame { position: relative; z-index: 2; border-radius: 40px; overflow: hidden; box-shadow: 0 30px 80px rgba(107,58,31,0.18); border: 12px solid white; transform: rotate(0.4deg); transition: 0.5s; height: clamp(460px, 62vh, 680px); background: linear-gradient(145deg, #f8b22f 0%, #ef9f14 55%, #de8f0d 100%); }
-        .hero-image-frame:hover { transform: rotate(0deg) scale(1.01); }
-        .hero-main-img {
-          width: 100%;
-          height: 100%;
-          display: block;
+        .text-stroke { color: #fff; -webkit-text-stroke: 0; }
+        .hero-description { font-size: clamp(0.98rem, 1.4vw, 1.08rem); line-height: 1.5; margin-bottom: 0.7rem; max-width: 620px; color: rgba(255,255,255,0.92); }
+        .hero-quick-badges {
+          display: flex;
+          gap: 0.55rem;
+          flex-wrap: wrap;
+          margin-bottom: 1rem;
+        }
+        .hero-quick-badges span {
+          border: 1px solid rgba(255,255,255,0.28);
+          background: rgba(0,0,0,0.2);
+          border-radius: 999px;
+          color: #fff;
+          font-size: 0.74rem;
+          font-weight: 700;
+          padding: 0.33rem 0.65rem;
+          letter-spacing: 0.2px;
+        }
+        .hero-food-strip {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 0.65rem;
+          margin-bottom: 0.75rem;
+        }
+        .hero-food-tile {
+          display: flex;
+          align-items: center;
+          gap: 0.55rem;
+          background: rgba(255,255,255,0.14);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 14px;
+          padding: 0.45rem 0.5rem;
+          backdrop-filter: blur(2px);
+        }
+        .hero-food-tile img {
+          width: 46px;
+          height: 46px;
+          border-radius: 9px;
           object-fit: cover;
-          object-position: center 52%;
-          background: transparent;
-          padding: 0;
+          flex-shrink: 0;
         }
-        .hero-visual-decorator { position: absolute; top: -20px; right: -20px; bottom: -20px; left: -20px; background: var(--orange); opacity: 0.07; border-radius: 56px; z-index: 1; transform: rotate(-1.6deg); }
-        @keyframes hero-float { 
-          0%, 100% { transform: translateY(0) rotate(0); }
-          50% { transform: translateY(-15px) rotate(1deg); }
+        .hero-food-tile span {
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #fff;
+          line-height: 1.2;
         }
-        .hero-trust { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.2rem; font-weight: 700; opacity: 0.86; font-size: 0.95rem; }
+        .hero-cta-group { display: flex; gap: 1rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+        .cta-primary { background: var(--orange); color: #1d1208; padding: 1.02rem 2rem; border-radius: 50px; font-weight: 900; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 10px 30px rgba(240,165,0,0.26); border: none; cursor: pointer; transition: 0.3s; }
+        .cta-primary:hover { background: #ffd176; transform: translateY(-3px); }
+        .cta-secondary { background: transparent; color: #fff; padding: 1.02rem 2rem; border-radius: 50px; font-weight: 800; border: 2px solid rgba(255,255,255,0.68); cursor: pointer; transition: 0.3s; }
+        .cta-secondary:hover { background: rgba(255,255,255,0.18); color: #fff; transform: translateY(-3px); }
+        .hero-trust { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.15rem; font-weight: 700; color: rgba(255,255,255,0.95); font-size: 0.95rem; }
         .trust-stars { display: flex; gap: 4px; }
+        .hero-slide-dots {
+          display: flex;
+          gap: 0.4rem;
+          margin-top: 0.65rem;
+        }
+        .hero-slide-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.45);
+          transition: all 0.35s ease;
+        }
+        .hero-slide-dot.active {
+          width: 20px;
+          background: var(--orange);
+        }
 
         /* Ticker */
         .hero-ticker { padding: 1.5rem 0; overflow: hidden; white-space: nowrap; }
@@ -822,10 +931,12 @@ const LandingPage = () => {
         @media (max-width: 1024px) {
           .hero-container, .about-grid, .events-grid, .visit-layout-v2 { grid-template-columns: 1fr; }
           .hero-content { text-align: center; align-items: center; }
-          .hero-description { margin: 0 auto 3rem; }
+          .hero-section { padding: 24px 0 56px; min-height: calc(100vh - 72px); }
+          .hero-description { margin: 0 auto 1rem; }
+          .hero-quick-badges { justify-content: center; }
+          .hero-food-strip { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .hero-cta-group { justify-content: center; }
-          .visual-image-wrapper { width: min(100%, 640px); margin: 0 auto; }
-          .hero-image-frame { height: clamp(340px, 50vw, 500px); }
+          .hero-slide-dots { justify-content: center; }
           .about-img, .events-img { height: 400px; }
           .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; }
           .gallery-grid-v2 { grid-template-columns: 1fr; grid-template-rows: auto; }
@@ -1030,16 +1141,20 @@ const LandingPage = () => {
           .container { padding: 0 1.2rem; }
           
           /* Hero Mobile Fix */
-          .hero-section { padding: 52px 0 72px; min-height: 74vh; text-align: center; }
-          .hero-section::before { opacity: 0.1; background-position: center right; }
-          .hero-section::after { background: linear-gradient(180deg, rgba(253,246,236,0.95) 0%, rgba(253,246,236,0.9) 100%); }
+          .hero-section { padding: 16px 0 46px; min-height: calc(100vh - 68px); text-align: center; }
+          .hero-overlay { background: linear-gradient(180deg, rgba(15, 10, 6, 0.84) 0%, rgba(15, 10, 6, 0.74) 42%, rgba(15, 10, 6, 0.62) 100%); }
           .hero-container { grid-template-columns: 1fr; gap: 3rem; }
-          .hero-content { padding: 1rem; border-radius: 20px; }
-          .hero-headline { font-size: 3rem; margin-bottom: 1.2rem; font-style: italic; }
-          .hero-description { font-size: 1.1rem; margin: 0 auto 2.5rem; }
-          .hero-cta-group { justify-content: center; gap: 1rem; }
-          .hero-image-frame { width: 100%; max-width: 100%; margin: 0 auto; border-width: 8px; height: clamp(260px, 62vw, 380px); }
-          .hero-main-img { padding: 6px; }
+          .hero-content { padding: 0.85rem; border-radius: 18px; }
+          .hero-headline { font-size: 2.02rem; margin-bottom: 0.72rem; font-style: italic; }
+          .hero-description { font-size: 0.96rem; margin: 0 auto 0.85rem; }
+          .hero-quick-badges span { font-size: 0.7rem; }
+          .hero-food-strip { grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-bottom: 0.65rem; }
+          .hero-food-tile:nth-child(n+3) { display: none; }
+          .hero-food-tile { padding: 0.4rem 0.42rem; }
+          .hero-food-tile img { width: 40px; height: 40px; }
+          .hero-food-tile span { font-size: 0.72rem; }
+          .hero-cta-group { justify-content: center; gap: 0.7rem; }
+          .cta-primary, .cta-secondary { padding: 0.88rem 1.35rem; font-size: 0.92rem; }
 
           .section-header h2 { font-size: 2.5rem; }
           .about-section, .gallery-section, .events-section, .visit-section { padding: 60px 0; }

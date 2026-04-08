@@ -19,7 +19,7 @@ const menuImageMap: Record<number, string> = {
   101: menuImage('Plain DOAsa.jpg'),
   102: menuImage('Egg Dosa.jpeg'),
   103: menuImage('Ghee karam Dosa.jpeg'),
-  104: menuImage('Ghee pudi Dosa.webp'),
+  104: menuImage('ghee pudi.jpeg'),
   105: menuImage('Set dosa.jpg'),
   106: menuImage('chessedosa.jpg'),
   107: menuImage('Onion Dosa.webp'),
@@ -115,13 +115,6 @@ export const menuCategories: MenuCategoryMap = {
   '🌊 VIZAG SPECIAL': [
     { id: 701, name: 'Muri Mixture', desc: 'A crunchy and spicy snack made with puffed rice, peanuts, onions, fresh raw mango pieces, curry leaves, and traditional Indian spices.', price: '$7.99', isVegan: true, isGlutenFree: true },
   ],
-  '🥤 DRINKS': [
-    { id: 801, name: 'Chikoo Shake', desc: 'A thick and creamy milkshake made from chikoo (sapodilla), a naturally sweet tropical fruit.', price: '$5.99', isGlutenFree: true },
-    { id: 802, name: 'Falooda', desc: 'A rich and indulgent dessert drink made with sweet milk, basil seeds, vermicelli, rose syrup, and ice cream.', price: '$8.99', isGlutenFree: true },
-    { id: 803, name: 'Fresh Lime Soda', desc: 'A refreshing drink made with fresh lime juice, soda, and a choice of sweet or salty flavor.', price: '$3.99', isVegan: true, isGlutenFree: true },
-    { id: 804, name: 'Tea', desc: 'Traditional Indian milk tea brewed with aromatic spices for a strong and comforting flavor.', price: '$3.49', isGlutenFree: true },
-    { id: 805, name: 'Filter Coffee', desc: 'Authentic South Indian coffee brewed using a metal filter and mixed with hot milk for a strong, rich taste.', price: '$3.99', isGlutenFree: true },
-  ],
   '🥯 HYDERABADI SPECIAL': [
     { id: 901, name: 'Bun Maska', desc: 'Soft bakery bun lightly toasted and generously spread with butter, traditionally served with hot tea.', price: '$4.99' },
   ],
@@ -137,6 +130,13 @@ export const menuCategories: MenuCategoryMap = {
   '🌶️ BAJJI (FRIED SNACKS)': [
     { id: 1201, name: 'Mirchi Bajji (Regular / Stuffed / Cut)', desc: 'Green chilies dipped in spiced batter and deep fried, crispy on the outside with a mild spicy kick inside.', price: '$7.99', isVegan: true, isGlutenFree: true },
     { id: 1202, name: 'Egg Bajji', desc: 'Boiled egg coated in seasoned batter and deep fried until crispy and golden.', price: '$8.49', isGlutenFree: true },
+  ],
+  '🥤 DRINKS': [
+    { id: 801, name: 'Chikoo Shake', desc: 'A thick and creamy milkshake made from chikoo (sapodilla), a naturally sweet tropical fruit.', price: '$5.99', isGlutenFree: true },
+    { id: 802, name: 'Falooda', desc: 'A rich and indulgent dessert drink made with sweet milk, basil seeds, vermicelli, rose syrup, and ice cream.', price: '$8.99', isGlutenFree: true },
+    { id: 803, name: 'Fresh Lime Soda', desc: 'A refreshing drink made with fresh lime juice, soda, and a choice of sweet or salty flavor.', price: '$3.99', isVegan: true, isGlutenFree: true },
+    { id: 804, name: 'Tea', desc: 'Traditional Indian milk tea brewed with aromatic spices for a strong and comforting flavor.', price: '$3.49', isGlutenFree: true },
+    { id: 805, name: 'Filter Coffee', desc: 'Authentic South Indian coffee brewed using a metal filter and mixed with hot milk for a strong, rich taste.', price: '$3.99', isGlutenFree: true },
   ],
 };
 
