@@ -9,62 +9,66 @@ export type MenuItem = {
 
 export type MenuCategoryMap = Record<string, MenuItem[]>;
 
-const DEFAULT_MENU_IMAGE = '/plaindosa.jpg';
+const MENU_IMAGE_BASE_PATH = '/menu%20images';
+
+const menuImage = (fileName: string) => `${MENU_IMAGE_BASE_PATH}/${encodeURIComponent(fileName)}`;
+
+const DEFAULT_MENU_IMAGE = menuImage('Plain DOAsa.jpg');
 
 const menuImageMap: Record<number, string> = {
-  101: '/plaindosa.jpg',
-  102: '/eggdosa.jpg',
-  103: '/gheekharamdosa.jpg',
-  104: '/Ghee%20Pudi%20Dosa.jpg',
-  105: '/Set%20Dosa.jpg',
-  106: '/Cheeze%20Dosa.jpg',
-  107: '/Onion%20Dosa.jpg',
-  108: '/Cheeze%20Dosa.jpg',
+  101: menuImage('Plain DOAsa.jpg'),
+  102: menuImage('Egg Dosa.jpeg'),
+  103: menuImage('Ghee karam Dosa.jpeg'),
+  104: menuImage('Ghee pudi Dosa.webp'),
+  105: menuImage('Set dosa.jpg'),
+  106: menuImage('Cheese dosa.jpeg'),
+  107: menuImage('Onion Dosa.webp'),
+  108: menuImage('Cheese dosa.jpeg'),
 
-  201: '/images/benne_dosa_karnataka.png',
-  202: '/Mysore%20Masala%20Dosa.jpg',
-  203: '/Pudina%20Dosa.jpg',
+  201: menuImage('Benne dosa.jpg'),
+  202: menuImage('mysore masala DOSa.jpeg'),
+  203: menuImage('Pudina DOsa.jpeg'),
 
-  301: '/Chef%27s%20Special%20Dosa.jpg',
+  301: menuImage('Set dosa.jpg'),
 
-  401: '/thatte%20idli.jpg',
-  402: '/gheepodiidli.jpg',
-  403: '/gheepodiidli.jpg',
-  404: '/sambar%20idli.jpg',
+  401: menuImage('Thatte idli.webp'),
+  402: menuImage('Ghee pudi thatte idli.jpg'),
+  403: menuImage('Ghee karam Thatte idli.webp'),
+  404: menuImage('Sambar Thatte idli.jpeg'),
 
-  501: '/mini%20idli%20ghee%20podi.jpg',
-  502: '/Ghee%20Pudi%20Chitti%20Idli.jpg',
-  503: '/Ghee%20Karam%20Chitti%20Idli.jpg',
-  504: '/sambar%20idli.jpg',
+  501: menuImage('reg chitti idli.avif'),
+  502: menuImage('Ghee pudi chitti idli.png'),
+  503: menuImage('karam chittti idli.jpeg'),
+  504: menuImage('Sambar chitti idli.jpeg'),
 
-  601: '/pani%20puri.jpg',
-  602: '/masala%20puri.jpg',
-  603: '/dahi%20puri.jpg',
-  604: '/bhel%20puri.jpg',
-  605: '/samosa%20chaat.jpg',
-  606: '/samosa%20chaat.jpg',
-  607: '/mirchi%20bajji.jpg',
-  608: '/samosa%20chaat.jpg',
+  601: menuImage('Pani_Puri.jpeg'),
+  602: menuImage('masala puri.jpeg'),
+  603: menuImage('dahi-puri.jpg'),
+  604: menuImage('Bhel puri.jpg'),
+  605: menuImage('samosa-chaat.jpg'),
+  606: menuImage('samosa-Dahi chaat.jpg'),
+  607: menuImage('samosa-chaat.jpg'),
+  608: menuImage('samosa.webp'),
 
-  701: '/images/muri_mixture_vizag.png',
+  701: menuImage('Muri mixture.avif'),
 
-  801: '/chikku%20shake.jpg',
-  802: '/falooda.jpg',
-  803: '/fresh%20lime%20soda.jpg',
-  804: '/tea.jpg',
-  805: '/images/filter_coffee_brass.png',
+  801: menuImage('chikoo shake.cms'),
+  802: menuImage('falooda.jpeg'),
+  803: menuImage('lime soda.jpeg'),
+  804: menuImage('tea.jpeg'),
+  805: menuImage('filter coffe.jpeg'),
 
-  901: '/Bun%20Maska.jpg',
+  901: menuImage('Bun_Maska.jpg'),
 
-  1001: '/chicken%20momos.jpg',
-  1002: '/veg%20momos.jpg',
+  1001: menuImage('chkn_momos.jpg'),
+  1002: menuImage('veg momos.jpeg'),
 
-  1101: '/chicken%20puff%20bakery.jpg',
-  1102: '/chicken%20puff%20bakery.jpg',
-  1103: '/Paneer%20Puff.jpg',
+  1101: menuImage('chicken puff.jpeg'),
+  1102: menuImage('Egg-Puffs.webp'),
+  1103: menuImage('panner puff.jpeg'),
 
-  1201: '/mirchi%20bajji.jpg',
-  1202: '/Egg%20Bajji.jpg',
+  1201: menuImage('samosa.webp'),
+  1202: menuImage('Egg-Puffs.webp'),
 };
 
 export const menuCategories: MenuCategoryMap = {

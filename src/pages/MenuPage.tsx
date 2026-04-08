@@ -319,7 +319,6 @@ const MenuPage = () => {
                         <div className="menu-item-copy">
                           <div className="menu-item-title-block">
                             <h3>{item.name}</h3>
-                            <div className="price-badge">{item.price}</div>
                           </div>
 
                           <div className="dietary-badges-row">
@@ -339,7 +338,7 @@ const MenuPage = () => {
                             src={getMenuImage(item.id)}
                             alt={item.name}
                             onError={(event) => {
-                              event.currentTarget.src = '/plaindosa.jpg';
+                              event.currentTarget.src = '/menu%20images/Plain%20DOAsa.jpg';
                             }}
                           />
                         </div>
@@ -699,13 +698,6 @@ const MenuPage = () => {
             font-weight: 800;
             color: var(--espresso);
             margin-bottom: 0.25rem;
-          }
-
-          .price-badge {
-            color: var(--brown);
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
           }
 
           .dietary-badges-row {
