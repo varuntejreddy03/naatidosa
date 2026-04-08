@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Plus, Search, Leaf, Wheat } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import OrderPopup from '../components/OrderPopup';
 import {
@@ -18,16 +18,11 @@ type MenuSection = {
   slug: string;
 };
 
-type DietFilter = 'none' | 'vegan' | 'gf';
-
 const MenuPage = () => {
   const navigate = useNavigate();
   const { closePopup, openPopup, selectedMenuItem, showPopup } = useOrderPopup();
   const [searchTerm, setSearchTerm] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
-  const [dietFilter, setDietFilter] = useState<DietFilter>('none');
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  const categoryStripRef = useRef<HTMLDivElement>(null);
 
   const allSections: MenuSection[] = Object.entries(menuCategories).map(([category, items]) => ({
     category,
@@ -51,13 +46,7 @@ const MenuPage = () => {
           .toLowerCase()
           .includes(normalizedQuery);
 
-        if (!matchesSearch) return false;
-
-        // Diet filter
-        if (dietFilter === 'vegan') return !!item.isVegan;
-        if (dietFilter === 'gf') return !!item.isGlutenFree;
-
-        return true;
+        return matchesSearch;
       }),
     }))
     .filter((section) => section.items.length > 0);
@@ -103,7 +92,7 @@ const MenuPage = () => {
     });
 
     return () => observer.disconnect();
-  }, [filteredSections, dietFilter]);
+  }, [filteredSections]);
 
   const handleCategoryClick = (slug: string) => {
     setActiveCategory(slug);
@@ -123,21 +112,6 @@ const MenuPage = () => {
     });
   };
 
-  const scrollCategories = (direction: 'left' | 'right') => {
-    if (categoryStripRef.current) {
-      const scrollAmount = 200;
-      categoryStripRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const toggleDietFilter = (filter: DietFilter) => {
-    setDietFilter(dietFilter === filter ? 'none' : filter);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <div className="menu-page">
       <OrderPopup
@@ -149,102 +123,6 @@ const MenuPage = () => {
           navigate({ pathname: '/', hash: '#visit' });
         }}
       />
-
-      <header className="menu-sticky-header">
-        <div className="container">
-          <div className="menu-nav-row">
-            <div className="menu-nav-actions">
-              <button 
-                type="button" 
-                className={`nav-btn ${showSearch ? 'active' : ''}`} 
-                onClick={() => setShowSearch(!showSearch)}
-                aria-label="Search"
-              >
-                <Search size={20} />
-              </button>
-              <button 
-                type="button" 
-                className="nav-btn" 
-                onClick={() => navigate('/')}
-                aria-label="Back"
-              >
-                <ChevronLeft size={24} />
-              </button>
-            </div>
-
-            <div className="category-container">
-              <button className="scroll-btn left" onClick={() => scrollCategories('left')}>
-                <ChevronLeft size={16} />
-              </button>
-              
-              <div className="menu-category-strip" ref={categoryStripRef} aria-label="Menu categories">
-                <button 
-                  type="button" 
-                  className={`diet-pill vegan ${dietFilter === 'vegan' ? 'active' : ''}`}
-                  onClick={() => toggleDietFilter('vegan')}
-                >
-                  <Leaf size={14} /> Vegan
-                </button>
-                <button 
-                  type="button" 
-                  className={`diet-pill gf ${dietFilter === 'gf' ? 'active' : ''}`}
-                  onClick={() => toggleDietFilter('gf')}
-                >
-                  <Wheat size={14} /> Gluten Free
-                </button>
-                <div className="v-divider"></div>
-                {filteredSections.map((section) => (
-                  <button
-                    key={section.slug}
-                    type="button"
-                    className={activeCategory === section.slug ? 'active' : ''}
-                    onClick={() => handleCategoryClick(section.slug)}
-                    aria-pressed={activeCategory === section.slug}
-                  >
-                    <span>{section.category.split('(')[0].trim()}</span>
-                  </button>
-                ))}
-              </div>
-
-              <button className="scroll-btn right" onClick={() => scrollCategories('right')}>
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-
-          <AnimatePresence>
-            {showSearch && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="search-overlay"
-              >
-                <input
-                  autoFocus
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search for dosa, idli, chutneys..."
-                  className="search-input"
-                />
-              </motion.div>
-            )}
-            
-            {dietFilter !== 'none' && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="filter-banner"
-              >
-                <span>Viewing <strong>{dietFilter === 'vegan' ? 'Vegan Only' : 'Gluten Free Only'}</strong> menu</span>
-                <button onClick={() => setDietFilter('none')}>Clear</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </header>
 
       <section className="menu-list-shell">
         <div className="container">
@@ -281,7 +159,7 @@ const MenuPage = () => {
                 <div className="menu-empty-state">
                   <h2>No matching menu items</h2>
                   <p>Try changing your diet filters or search term.</p>
-                  <button onClick={() => { setSearchTerm(''); setDietFilter('none'); }} className="clear-filters">
+                  <button onClick={() => { setSearchTerm(''); }} className="clear-filters">
                     Clear All Filters
                   </button>
                 </div>
@@ -362,153 +240,8 @@ const MenuPage = () => {
             padding-bottom: 80px;
           }
 
-          .menu-sticky-header {
-            position: sticky;
-            top: 100px;
-            z-index: 100;
-            background: rgba(253, 246, 236, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(107, 58, 31, 0.1);
-            transition: top 0.3s ease;
-          }
-
-          .menu-nav-row {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-          }
-
-          .menu-nav-actions {
-            display: flex;
-            gap: 0.5rem;
-          }
-
-          .nav-btn {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #fff;
-            border: 1px solid rgba(107, 58, 31, 0.1);
-            color: var(--brown);
-            transition: 0.2s;
-          }
-
-          .nav-btn:hover, .nav-btn.active {
-            background: var(--brown);
-            color: #fff;
-            border-color: var(--brown);
-            transform: translateY(-1px);
-          }
-
-          .category-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            min-width: 0;
-            position: relative;
-          }
-
-          .menu-category-strip {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            padding: 4px 0;
-          }
-
-          .menu-category-strip::-webkit-scrollbar {
-            display: none;
-          }
-
-          .diet-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 0.6rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            border: 1.5px solid transparent;
-            background: #fff;
-          }
-
-          .diet-pill.vegan { color: #2D6A4F; border-color: #2D6A4F; }
-          .diet-pill.vegan.active { background: #2D6A4F; color: #fff; }
-          
-          .diet-pill.gf { color: #B08968; border-color: #B08968; }
-          .diet-pill.gf.active { background: #B08968; color: #fff; }
-
-          .v-divider {
-            width: 1.5px;
-            height: 24px;
-            background: rgba(107, 58, 31, 0.1);
-            margin: 0 4px;
-            flex-shrink: 0;
-          }
-
-          .menu-category-strip button:not(.diet-pill) {
-            flex-shrink: 0;
-            padding: 0.7rem 1.4rem;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            color: var(--espresso);
-            font-size: 0.88rem;
-            font-weight: 700;
-            white-space: nowrap;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(107, 58, 31, 0.1);
-          }
-
-          .menu-category-strip button:not(.diet-pill).active {
-            background: var(--brown);
-            color: #fff;
-            border-color: var(--brown);
-            box-shadow: 0 8px 20px rgba(107, 58, 31, 0.2);
-          }
-
-          .scroll-btn {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: #fff;
-            border: 1px solid rgba(107, 58, 31, 0.1);
-            color: var(--brown);
-            cursor: pointer;
-            z-index: 2;
-          }
-
-          .search-overlay {
-            margin-top: 1rem;
-            overflow: hidden;
-          }
-
-          .search-input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            border-radius: 14px;
-            border: 1px solid rgba(107, 58, 31, 0.2);
-            background: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
-            box-shadow: 0 4px 20px rgba(107, 58, 31, 0.05);
-          }
-
           .menu-list-shell {
-            padding: 3rem 0;
+            padding: 0 0 3rem;
           }
 
           .menu-layout {
@@ -562,7 +295,7 @@ const MenuPage = () => {
           .side-category-list {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.9rem;
             max-height: calc(100vh - 300px);
             overflow-y: auto;
             padding-right: 4px;
@@ -583,10 +316,10 @@ const MenuPage = () => {
             background: transparent;
             color: var(--espresso);
             border-radius: 10px;
-            padding: 0.5rem 0.6rem;
-            font-size: 0.93rem;
+            padding: 0.95rem 0.9rem;
+            font-size: 0.97rem;
             font-weight: 600;
-            line-height: 1.2;
+            line-height: 1.4;
             font-family: var(--font-body);
           }
 
@@ -774,9 +507,6 @@ const MenuPage = () => {
           }
 
           @media (max-width: 1100px) {
-            .menu-sticky-header {
-              top: 80px;
-            }
             .menu-group {
               scroll-margin-top: 160px;
             }
@@ -795,30 +525,6 @@ const MenuPage = () => {
           }
 
           @media (max-width: 600px) {
-            .menu-nav-row {
-              gap: 0.65rem;
-              flex-wrap: wrap;
-              align-items: stretch;
-            }
-            .menu-nav-actions {
-              display: flex;
-              width: auto;
-            }
-            .category-container {
-              width: 100%;
-            }
-            .scroll-btn {
-              display: none;
-            }
-            .menu-category-strip {
-              gap: 0.5rem;
-              width: 100%;
-              padding: 2px 0;
-            }
-            .menu-category-strip button:not(.diet-pill) {
-              padding: 0.62rem 1rem;
-              font-size: 0.82rem;
-            }
             .menu-item-card {
                padding: 1rem;
             }

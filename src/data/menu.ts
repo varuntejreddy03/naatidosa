@@ -21,7 +21,7 @@ const menuImageMap: Record<number, string> = {
   103: menuImage('Ghee karam Dosa.jpeg'),
   104: menuImage('Ghee pudi Dosa.webp'),
   105: menuImage('Set dosa.jpg'),
-  106: menuImage('Cheese dosa.jpeg'),
+  106: menuImage('chessedosa.jpg'),
   107: menuImage('Onion Dosa.webp'),
   108: menuImage('Cheese dosa.jpeg'),
 
@@ -29,7 +29,7 @@ const menuImageMap: Record<number, string> = {
   202: menuImage('mysore masala DOSa.jpeg'),
   203: menuImage('Pudina DOsa.jpeg'),
 
-  301: menuImage('Set dosa.jpg'),
+  301: menuImage("Chef's Special Dosa.jpg"),
 
   401: menuImage('Thatte idli.webp'),
   402: menuImage('Ghee pudi thatte idli.jpg'),
@@ -67,8 +67,8 @@ const menuImageMap: Record<number, string> = {
   1102: menuImage('Egg-Puffs.webp'),
   1103: menuImage('panner puff.jpeg'),
 
-  1201: menuImage('samosa.webp'),
-  1202: menuImage('Egg-Puffs.webp'),
+  1201: menuImage('mirchi bajji.jpg'),
+  1202: menuImage('Egg Bajji.jpg'),
 };
 
 export const menuCategories: MenuCategoryMap = {
