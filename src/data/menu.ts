@@ -19,7 +19,7 @@ const menuImageMap: Record<number, string> = {
   101: menuImage('Plain DOAsa.jpg'),
   102: menuImage('Egg Dosa.jpeg'),
   103: menuImage('Ghee karam Dosa.jpeg'),
-  104: menuImage('ghee pudi.jpeg'),
+  104: menuImage('Ghee pudi thatte idli.jpg'),
   105: menuImage('Set dosa.jpg'),
   106: menuImage('chessedosa.jpg'),
   107: menuImage('Onion Dosa.webp'),
@@ -119,7 +119,7 @@ export const menuCategories: MenuCategoryMap = {
     { id: 901, name: 'Bun Maska', desc: 'Soft bakery bun lightly toasted and generously spread with butter, traditionally served with hot tea.', price: '$4.99' },
   ],
   '🥟 MOMOS (Steamed Dumplings)': [
-    { id: 1001, name: 'Chicken Momos', desc: 'Soft steamed dumplings filled with finely seasoned chicken and spices.', price: '$11.99' },
+    { id: 1001, name: 'Chicken Momos (Steamed / Fried)', desc: 'Juicy chicken momos served your way: soft steamed or crispy fried, with house chili sauce.', price: '$11.99' },
     { id: 1002, name: 'Veg Momos', desc: 'Steamed dumplings filled with mixed vegetables and mild seasoning.', price: '$10.99' },
   ],
   '🥐 PUFFS (Flaky Pastries)': [

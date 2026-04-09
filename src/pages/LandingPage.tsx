@@ -22,12 +22,12 @@ const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
 const heroSlides = [
-  { src: '/menu%20images/Benne%20dosa.jpg', alt: 'Benne dosa' },
-  { src: '/menu%20images/Ghee%20pudi%20thatte%20idli.jpg', alt: 'Ghee pudi thatte idli' },
-  { src: '/menu%20images/dahi-puri.jpg', alt: 'Dahi puri' },
-  { src: '/menu%20images/filter%20coffe.jpeg', alt: 'Filter coffee' },
-  { src: '/menu%20images/fried%20momos.jpeg', alt: 'Momos' },
-  { src: '/menu%20images/Ghee%20karam%20Dosa.jpeg', alt: 'Ghee karam dosa' },
+  { src: '/images/hero_dosa_idli_platter.png', alt: 'Naati dosa and idli platter' },
+  { src: '/images/hero-dosa.jpg', alt: 'Signature dosa closeup' },
+  { src: '/images/g1.png', alt: 'Signature masala dosa' },
+  { src: '/images/g2.png', alt: 'South Indian spread' },
+  { src: '/images/g3.png', alt: 'Freshly plated special' },
+  { src: '/images/gallery.png', alt: 'Naati Dosa gallery highlight' },
 ];
 
 const reviewsData = [
@@ -136,8 +136,8 @@ const LandingPage = () => {
               </div>
 
               <h1 className="hero-headline">
-                <span className="line-1">Savor the Rich Flavors of</span>
-                <span className="line-2"><span className="text-stroke">Authentic Dum Biryani</span></span>
+                <span className="line-1">Fresh South Indian Flavors</span>
+                <span className="line-2"><span className="text-stroke">Naati Dosa, Made with Heart</span></span>
               </h1>
             </motion.div>
 
