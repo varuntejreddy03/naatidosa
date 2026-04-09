@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Star, MapPin, MousePointerClick,
   Clock, Calendar, Instagram,
-  Facebook, Twitter, Mail, Phone, ExternalLink,
+  Facebook, Mail, Phone, ExternalLink,
   MessageCircle, ArrowUp
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -94,7 +94,7 @@ const LandingPage = () => {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/15616648524?text=I'd%20like%20to%20book%20an%20event%20with%20Naati%20Dosa"
+        href="https://wa.me/15616695387?text=I'd%20like%20to%20book%20an%20event%20with%20Naati%20Dosa"
         target="_blank"
         rel="noopener noreferrer"
         className="floating-whatsapp"
@@ -388,8 +388,7 @@ const LandingPage = () => {
                 <Clock className="card-icon text-orange" size={32} />
                 <h3>Trading Hours</h3>
                 <div className="hours-v2">
-                  <div className="h-row"><span>Mon - Fri</span> <strong>4PM - 12AM</strong></div>
-                  <div className="h-row"><span>Sat - Sun</span> <strong>4PM - 1AM</strong></div>
+                  <div className="h-row"><span>All Days</span> <strong>6PM - 12AM</strong></div>
                 </div>
               </motion.div>
 
@@ -402,7 +401,7 @@ const LandingPage = () => {
                 <Phone className="card-icon text-orange" size={32} />
                 <h3>Order Ahead</h3>
                 <p>Call us to skip the line</p>
-                <a href="tel:+15616648524" className="phone-link">+1 (561) 664-8524</a>
+                <a href="tel:+15616695387" className="phone-link">+1 (561) 669-5387</a>
               </motion.div>
             </div>
 
@@ -435,9 +434,11 @@ const LandingPage = () => {
                 Experience the heritage in every crispy bite.
               </p>
               <div className="f-socials">
-                <a href="#" className="s-link"><Instagram size={24} /></a>
-                <a href="#" className="s-link"><Facebook size={24} /></a>
-                <a href="#" className="s-link"><Twitter size={24} /></a>
+                <a href="https://www.instagram.com/naati_Dosa" target="_blank" rel="noopener noreferrer" className="s-link"><Instagram size={24} /></a>
+                <a href="https://www.facebook.com/people/Naati-Dosa/61587689076429/" target="_blank" rel="noopener noreferrer" className="s-link"><Facebook size={24} /></a>
+                <a href="#" className="s-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" /></svg>
+                </a>
               </div>
             </div>
 
@@ -461,7 +462,7 @@ const LandingPage = () => {
                   <Phone size={20} className="text-orange" />
                   <div>
                     <span>Call to Order</span>
-                    <p>+1 (561) 664-8524</p>
+                    <p>+1 (561) 669-5387</p>
                   </div>
                 </div>
                 <div className="c-item">
@@ -747,7 +748,7 @@ const LandingPage = () => {
         .footer-top { display: grid; grid-template-columns: 1.8fr 0.7fr 1.2fr 1.3fr; gap: 5rem; margin-bottom: 80px; }
         .f-logo-group { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; }
         .footer-logo-img { 
-          height: 150px; 
+          height: 320px; 
           width: auto; 
           object-fit: contain;
           filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));

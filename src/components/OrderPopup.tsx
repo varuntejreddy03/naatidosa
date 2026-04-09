@@ -116,7 +116,7 @@ const OrderPopup = ({ onClose, onPickup, selectedMenuItem, show }: OrderPopupPro
             transform: rotate(90deg);
           }
           .popup-logo {
-            height: 90px;
+            height: 160px;
             margin-bottom: 1.5rem;
           }
           .popup-header h3 {

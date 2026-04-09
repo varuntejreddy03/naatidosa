@@ -182,8 +182,8 @@ const Navbar = () => {
                 </div>
 
                 <div className="drawer-socials">
-                  <a href="#"><Instagram size={20} /></a>
-                  <a href="#"><Facebook size={20} /></a>
+                  <a href="https://www.instagram.com/naati_Dosa" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
+                  <a href="https://www.facebook.com/people/Naati-Dosa/61587689076429/" target="_blank" rel="noopener noreferrer"><Facebook size={20} /></a>
                   <a href="#"><Truck size={20} /></a>
                 </div>
               </div>
@@ -201,7 +201,7 @@ const Navbar = () => {
           background: rgba(253, 246, 236, 0.94);
           backdrop-filter: blur(8px);
           border-bottom: 1px solid rgba(107, 58, 31, 0.08);
-          height: 78px;
+          height: 85px;
           display: flex;
           align-items: center;
           transition: all 0.4s ease;
@@ -220,14 +220,23 @@ const Navbar = () => {
         .brand-group {
           display: flex;
           align-items: center;
+          justify-content: center;
           text-decoration: none;
+          position: relative;
+          z-index: 10;
+          width: 140px;
+          height: 100%;
         }
         .nav-brand-logo {
-          height: 64px;
+          height: 135px;
           width: auto;
           object-fit: contain;
-          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+          filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
           transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
         .nav-links {
           display: flex;
@@ -412,16 +421,18 @@ const Navbar = () => {
         }
 
         @media (max-width: 1100px) {
-          .nav-brand-logo { height: 62px; }
+          .nav-brand-logo { height: 110px; }
+          .brand-group { width: 110px; }
           .nav-links { display: none; }
           .desktop-only { display: none; }
           .mobile-toggle { display: flex; }
-          .sticky-nav { height: 72px; }
+          .sticky-nav { height: 80px; }
         }
         @media (max-width: 768px) {
-          .nav-brand-logo { height: 58px; }
+          .nav-brand-logo { height: 95px; }
+          .brand-group { width: 95px; }
           .nav-content { padding: 0 1.2rem; }
-          .sticky-nav { height: 68px; }
+          .sticky-nav { height: 75px; }
           .drawer-links button { font-size: 2.2rem; }
         }
       `}} />
