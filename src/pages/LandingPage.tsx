@@ -422,65 +422,54 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <footer className="footer-v2 bg-brown text-cream">
+      <footer className="footer-v3 bg-espresso text-cream">
         <div className="container">
-          <div className="footer-top">
-            <div className="f-col f-main">
-              <div className="f-logo-group">
-                <img src={logo01} alt="Naati Dosa Logo" className="footer-logo-img" />
-              </div>
-              <p className="f-brand-desc">
-                Bringing the authentic, soul-stirring taste of Karnataka's traditional dosas to the vibrant streets of South Florida.
-                Experience the heritage in every crispy bite.
-              </p>
-              <div className="f-socials">
-                <a href="https://www.instagram.com/naati_Dosa" target="_blank" rel="noopener noreferrer" className="s-link"><Instagram size={24} /></a>
-                <a href="https://www.facebook.com/people/Naati-Dosa/61587689076429/" target="_blank" rel="noopener noreferrer" className="s-link"><Facebook size={24} /></a>
-                <a href="#" className="s-link">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" /></svg>
+          <div className="footer-main-area">
+            <div className="footer-branding">
+              <img src={logo01} alt="Naati Dosa Logo" className="footer-giant-logo" />
+              <p className="footer-tagline">Authentic Karnataka Heritage in Every Bite.</p>
+              <div className="footer-social-wrap">
+                <a href="https://www.instagram.com/naati_Dosa" target="_blank" rel="noopener noreferrer" className="footer-soc-link"><Instagram size={22} /></a>
+                <a href="https://www.facebook.com/people/Naati-Dosa/61587689076429/" target="_blank" rel="noopener noreferrer" className="footer-soc-link"><Facebook size={22} /></a>
+                <a href="#" className="footer-soc-link">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" /></svg>
                 </a>
               </div>
             </div>
 
-            <div className="f-col">
-              <h4>Explore</h4>
-              <ul className="f-links">
-                <li><button onClick={() => scrollToSection('home')}>Home</button></li>
-                <li><button onClick={() => scrollToSection('about')}>Our Story</button></li>
-                <li><button onClick={() => navigate('/menu')}>The Menu</button></li>
-                <li><button onClick={() => scrollToSection('gallery')}>Gallery</button></li>
-                <li><button onClick={() => scrollToSection('reviews')}>Reviews</button></li>
-                <li><button onClick={() => scrollToSection('events')}>Events</button></li>
-                <li><button onClick={() => scrollToSection('visit')}>Find Us</button></li>
-              </ul>
-            </div>
-
-            <div className="f-col">
-              <h4>Contact Us</h4>
-              <div className="f-contact-items">
-                <div className="c-item">
-                  <Phone size={20} className="text-orange" />
-                  <div>
-                    <span>Call to Order</span>
-                    <p>+1 (561) 669-5387</p>
-                  </div>
-                </div>
-                <div className="c-item">
-                  <MapPin size={20} className="text-orange" />
-                  <div>
-                    <span>Truck Location</span>
-                    <p>1459 Yamato Rd, Boca Raton, FL 33431</p>
-                  </div>
+            <div className="footer-grid-v3">
+              <div className="footer-col">
+                <h3>Our Story</h3>
+                <p>Born from traditional recipes and served with passion in the heart of South Florida. Experience the soul of Karnataka.</p>
+              </div>
+              <div className="footer-col">
+                <h3>Quick Links</h3>
+                <ul className="footer-nav-list">
+                  <li><button onClick={() => scrollToSection('home')}>Home</button></li>
+                  <li><button onClick={() => navigate('/menu')}>The Menu</button></li>
+                  <li><button onClick={() => scrollToSection('about')}>Our Journey</button></li>
+                  <li><button onClick={() => scrollToSection('visit')}>Find Our Truck</button></li>
+                </ul>
+              </div>
+              <div className="footer-col">
+                <h3>Contact</h3>
+                <div className="footer-contact-info">
+                  <p><Phone size={16} className="text-orange" /> +1 (561) 669-5387</p>
+                  <p><MapPin size={16} className="text-orange" /> 1459 Yamato Rd, Boca Raton, FL 33431</p>
+                  <p><Clock size={16} className="text-orange" /> All Days: 6PM - 12AM</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="footer-bottom">
-            <p>&copy; 2026 Naati Dosa. Handcrafted with Love.</p>
-            <div className="b-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
+          <div className="footer-legal">
+            <div className="legal-left">
+              <span>&copy; 2026 Naati Dosa Florida. All Rights Reserved.</span>
+            </div>
+            <div className="legal-right">
+              <a href="#">Privacy</a>
+              <a href="#">Terms</a>
+              <a href="#">Cookies</a>
             </div>
           </div>
         </div>
@@ -743,62 +732,48 @@ const LandingPage = () => {
         .visit-map-v2 { height: 600px; box-shadow: 0 30px 60px rgba(107,58,31,0.1); border-radius: 40px; overflow: hidden; border: 8px solid white; position: relative; background: #eee; }
         .visit-map-v2 iframe { width: 100%; height: 100%; border: 0; display: block; filter: saturate(0.7) contrast(1.1) brightness(1.02); }
 
-        /* Footer Improvements */
-        .footer-v2 { padding: 120px 0 60px; border-top: 1px solid rgba(107,58,31,0.1); }
-        .footer-top { display: grid; grid-template-columns: 1.8fr 0.7fr 1.2fr 1.3fr; gap: 5rem; margin-bottom: 80px; }
-        .f-logo-group { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; }
-        .footer-logo-img { 
-          height: 320px; 
+        /* Footer v3 Redesign */
+        .footer-v3 { padding: 100px 0 40px; background: #2a1a0f; color: var(--cream); position: relative; overflow: hidden; }
+        .footer-main-area { display: flex; flex-direction: column; align-items: center; margin-bottom: 100px; }
+        .footer-branding { text-align: center; margin-bottom: 80px; width: 100%; max-width: 800px; }
+        .footer-giant-logo { 
+          height: 240px; 
           width: auto; 
-          object-fit: contain;
-          filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
-          transition: 0.4s ease;
+          margin-bottom: 2rem; 
+          filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+          transition: 0.5s ease;
         }
-        .footer-logo-img:hover {
-          transform: scale(1.08);
-        }
-        .f-logo-text { display: flex; flex-direction: column; line-height: 1; }
-        .f-logo-main { font-family: var(--font-heading); font-size: 2.4rem; font-weight: 900; color: var(--white); letter-spacing: -1.5px; }
-        .f-logo-sub { font-family: var(--font-heading); font-size: 0.85rem; color: var(--orange); text-transform: uppercase; letter-spacing: 4px; margin-top: 6px; }
-        .f-brand-desc { opacity: 0.6; line-height: 1.8; margin-bottom: 2.5rem; font-size: 1.05rem; max-width: 400px; }
-        .f-socials { display: flex; gap: 1.5rem; }
-        .s-link { background: rgba(255,255,255,0.08); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: white; }
-        .s-link:hover { background: var(--orange); transform: translateY(-5px) rotate(8deg); }
-        .footer-top h4 { color: white; font-size: 1.3rem; margin-bottom: 2.5rem; font-family: var(--font-heading); position: relative; padding-bottom: 12px; font-weight: 800; }
-        .footer-top h4::after { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: var(--orange); border-radius: 50px; }
-        .f-links { display: flex; flex-direction: column; gap: 1.2rem; }
-        .f-links button { background: none; border: none; color: white; opacity: 0.6; font-size: 1.05rem; text-align: left; transition: 0.3s; cursor: pointer; padding: 0; font-weight: 500; }
-        .f-links button:hover { opacity: 1; color: var(--orange); transform: translateX(8px); }
-        .f-contact-items { display: grid; gap: 2rem; }
-        .c-item { display: flex; gap: 1.5rem; align-items: center; }
-        .c-item span { display: block; font-size: 0.75rem; text-transform: uppercase; opacity: 0.5; letter-spacing: 1.5px; margin-bottom: 0.3rem; font-weight: 800; }
-        .c-item p { font-weight: 700; font-size: 1.1rem; color: white; }
-        .f-newsletter p { margin-bottom: 2rem; opacity: 0.6; font-size: 1.05rem; }
-        .f-form { display: flex; background: rgba(255,255,255,0.06); padding: 0.6rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .f-form:focus-within { background: rgba(255,255,255,0.1); border-color: var(--orange); }
-        .f-form input { flex: 1; background: none; border: none; padding: 0 1.5rem; color: white; outline: none; font-size: 1rem; }
-        .f-form button { background: var(--orange); color: white; padding: 0.9rem 2rem; border-radius: 50px; font-weight: 900; border: none; cursor: pointer; transition: 0.3s; }
-        .f-form button:hover { background: white; color: var(--brown); transform: scale(1.05); }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 50px; display: flex; justify-content: space-between; align-items: center; opacity: 0.5; font-size: 0.95rem; font-weight: 500; }
-        .b-links { display: flex; gap: 3rem; }
-        .b-links a { color: white; text-decoration: none; transition: 0.3s; }
-        .b-links a:hover { color: var(--orange); }
+        .footer-giant-logo:hover { transform: scale(1.05); }
+        .footer-tagline { font-family: var(--font-heading); font-size: 1.6rem; font-style: italic; opacity: 0.8; margin-bottom: 2.5rem; letter-spacing: 0.5px; }
+        .footer-social-wrap { display: flex; gap: 1.5rem; justify-content: center; }
+        .footer-soc-link { background: rgba(255,255,255,0.06); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.4s; color: white; border: 1px solid rgba(255,255,255,0.1); }
+        .footer-soc-link:hover { background: var(--orange); border-color: var(--orange); transform: translateY(-5px); color: #fff; }
+        
+        .footer-grid-v3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6rem; width: 100%; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 80px; }
+        .footer-col h3 { color: white; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; font-weight: 800; font-family: var(--font-heading); }
+        .footer-col p { opacity: 0.6; line-height: 1.8; font-size: 1rem; }
+        .footer-nav-list { display: flex; flex-direction: column; gap: 1rem; }
+        .footer-nav-list button { background: none; border: none; color: white; opacity: 0.5; text-align: left; padding: 0; font-size: 1.05rem; cursor: pointer; transition: 0.3s; }
+        .footer-nav-list button:hover { opacity: 1; color: var(--orange); padding-left: 8px; }
+        .footer-contact-info { display: flex; flex-direction: column; gap: 1.2rem; }
+        .footer-contact-info p { display: flex; align-items: flex-start; gap: 1rem; text-align: left; opacity: 0.7; }
+        
+        .footer-legal { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; display: flex; justify-content: space-between; align-items: center; opacity: 0.4; font-size: 0.88rem; font-weight: 500; }
+        .legal-right { display: flex; gap: 2.5rem; }
+        .legal-right a { color: white; text-decoration: none; transition: 0.3s; }
+        .legal-right a:hover { color: var(--orange); }
 
         @media (max-width: 1024px) {
-          .hero-container, .about-grid, .events-grid, .visit-layout-v2 { grid-template-columns: 1fr; }
-          .hero-content { text-align: left; align-items: flex-start; }
-          .hero-section { min-height: calc(100vh - 72px); }
-          .hero-cta-group { justify-content: flex-start; }
-          .about-img, .events-img { height: 400px; }
-          .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; }
-          .gallery-grid-v2 { grid-template-columns: 1fr; grid-template-rows: auto; }
-          .g-large { grid-row: auto; }
-          .visit-cards-grid { order: 2; }
-          .visit-map-v2 { order: 1; height: 450px; }
+          .footer-grid-v3 { grid-template-columns: 1fr; gap: 4rem; text-align: center; }
+          .footer-col p, .footer-contact-info p { text-align: center; justify-content: center; }
+          .footer-nav-list button { text-align: center; }
+          .footer-nav-list button:hover { padding-left: 0; }
         }
         @media (max-width: 768px) {
-          .footer-top { grid-template-columns: 1fr; gap: 4rem; }
-          .footer-bottom { flex-direction: column; gap: 2rem; text-align: center; }
+          .footer-giant-logo { height: 180px; }
+          .footer-tagline { font-size: 1.3rem; }
+          .footer-legal { flex-direction: column; gap: 1.5rem; text-align: center; }
+          .legal-right { gap: 1.5rem; }
           .b-links { gap: 1.5rem; justify-content: center; }
         }
 
