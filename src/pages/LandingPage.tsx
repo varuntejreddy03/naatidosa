@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Star, MapPin, MousePointerClick,
-  ChevronRight, Clock, Calendar, Instagram,
+  Clock, Calendar, Instagram,
   Facebook, Twitter, Mail, Phone, ExternalLink,
   MessageCircle, ArrowUp
 } from 'lucide-react';
@@ -22,18 +22,12 @@ const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
 const heroSlides = [
-  { src: '/images/hero-dosa.jpg', alt: 'Signature South Indian dish' },
-  { src: heroDosa, alt: 'Dosa and idli platter' },
-  { src: g1, alt: 'Crispy dosa with sides' },
-  { src: g2, alt: 'Food spread with chutneys' },
-  { src: g3, alt: 'Freshly served South Indian food' },
-];
-
-const heroFoodTiles = [
-  { src: '/menu%20images/Plain%20DOAsa.jpg', label: 'Plain Dosa' },
-  { src: '/menu%20images/Ghee%20karam%20Dosa.jpeg', label: 'Ghee Karam Dosa' },
-  { src: '/menu%20images/Thatte%20idli.webp', label: 'Thatte Idli' },
-  { src: '/menu%20images/chikoo%20shake.cms', label: 'Chikoo Shake' },
+  { src: '/menu%20images/Benne%20dosa.jpg', alt: 'Benne dosa' },
+  { src: '/menu%20images/Ghee%20pudi%20thatte%20idli.jpg', alt: 'Ghee pudi thatte idli' },
+  { src: '/menu%20images/dahi-puri.jpg', alt: 'Dahi puri' },
+  { src: '/menu%20images/filter%20coffe.jpeg', alt: 'Filter coffee' },
+  { src: '/menu%20images/fried%20momos.jpeg', alt: 'Momos' },
+  { src: '/menu%20images/Ghee%20karam%20Dosa.jpeg', alt: 'Ghee karam dosa' },
 ];
 
 const reviewsData = [
@@ -75,7 +69,7 @@ const LandingPage = () => {
   useEffect(() => {
     const slideTimer = window.setInterval(() => {
       setHeroSlideIndex((prevIndex) => (prevIndex + 1) % heroSlides.length);
-    }, 60000);
+    }, 5000);
 
     return () => window.clearInterval(slideTimer);
   }, []);
@@ -101,7 +95,7 @@ const LandingPage = () => {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/5616695387?text=I'd%20like%20to%20book%20an%20event%20with%20Naati%20Dosa"
+        href="https://wa.me/15616648524?text=I'd%20like%20to%20book%20an%20event%20with%20Naati%20Dosa"
         target="_blank"
         rel="noopener noreferrer"
         className="floating-whatsapp"
@@ -130,93 +124,33 @@ const LandingPage = () => {
         </div>
         <div className="hero-overlay"></div>
 
-        <div className="hero-blobs">
-          <div className="hero-blob blob-1"></div>
-          <div className="hero-blob blob-2"></div>
-        </div>
-
         <div className="container hero-container">
           <div className="hero-content">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.65, ease: 'easeOut' }}
             >
               <div className="hero-badge">
-                <span className="badge-dot"></span>
                 <span>Best Indian Food in Florida</span>
               </div>
 
               <h1 className="hero-headline">
-                <span className="line-1">Savor Rich Flavors of</span>
-                <span className="line-2"><span className="text-stroke">Authentic South Indian</span></span>
-                <span className="line-3 text-orange italic">Street Food, Fresh Daily</span>
+                <span className="line-1">Savor the Rich Flavors of</span>
+                <span className="line-2"><span className="text-stroke">Authentic Dum Biryani</span></span>
               </h1>
             </motion.div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="hero-description"
-            >
-              Authentic South Indian dosas and soft idlis, served fresh. We're bringing the crispy, golden tradition of home right to your street.
-            </motion.p>
-
-            <div className="hero-quick-badges" aria-label="Hero highlights">
-              <span>Live Dosa Counter</span>
-              <span>Fresh Chutneys</span>
-              <span>Delray Beach</span>
-            </div>
-
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.35 }}
-              className="hero-food-strip"
-            >
-              {heroFoodTiles.map((tile) => (
-                <div key={tile.label} className="hero-food-tile">
-                  <img src={tile.src} alt={tile.label} />
-                  <span>{tile.label}</span>
-                </div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              transition={{ duration: 0.65, delay: 0.1 }}
               className="hero-cta-group"
             >
-              <button onClick={() => navigate('/menu')} className="cta-primary">
-                Explore Menu <ChevronRight size={20} />
-              </button>
-              <button onClick={() => scrollToSection('visit')} className="cta-secondary">
-                Find Our Truck
+              <button onClick={() => window.dispatchEvent(new Event('openOrderPopup'))} className="cta-primary">
+                Order online <ArrowRight size={16} />
               </button>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-              className="hero-trust"
-            >
-              <div className="trust-stars">
-                {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#F5A623" color="#F5A623" />)}
-              </div>
-              <span>"Best Dosa & Idli in Florida" — Local Foodie</span>
-            </motion.div>
-
-            <div className="hero-slide-dots" aria-hidden="true">
-              {heroSlides.map((slide, index) => (
-                <span
-                  key={slide.src}
-                  className={`hero-slide-dot ${index === heroSlideIndex ? 'active' : ''}`}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -226,7 +160,7 @@ const LandingPage = () => {
         <div className="ticker-inner ticker-scroll">
           {[...Array(8)].map((_, i) => (
             <span key={i} className="ticker-item">
-              CRISPY DOSA <span className="text-orange">✦</span> FRESH CHUTNEY <span className="text-orange">✦</span> AUTHENTIC SPICES <span className="text-orange">✦</span> DELRAY BEACH <span className="text-orange">✦</span>
+              CRISPY DOSA <span className="text-orange">✦</span> FRESH CHUTNEY <span className="text-orange">✦</span> AUTHENTIC SPICES <span className="text-orange">✦</span> BOCA RATON <span className="text-orange">✦</span>
             </span>
           ))}
         </div>
@@ -261,7 +195,7 @@ const LandingPage = () => {
             <p className="about-desc">
               Founded on the belief that the best food comes from recipes passed down through generations.
               Our journey started in the heart of Karnataka, where the art of the perfect dosa is a daily ritual.
-              Now, we've brought those authentic flavors to the sun-drenched streets of Delray Beach.
+              Now, we've brought those authentic flavors to the vibrant food scene in Boca Raton.
             </p>
             <div className="about-features">
               <div className="a-feat">
@@ -441,9 +375,9 @@ const LandingPage = () => {
               >
                 <MapPin className="card-icon text-orange" size={32} />
                 <h3>Location</h3>
-                <p>Delray Beach, Florida</p>
-                <p className="detail">Downtown Parking Lot, Atlantic Ave</p>
-                <a href="https://maps.google.com" target="_blank" className="nav-link-v2">Open in Maps <ExternalLink size={16} /></a>
+                <p>1459 Yamato Rd, Boca Raton, FL 33431</p>
+                <p className="detail">Florida, United States</p>
+                <a href="https://maps.google.com/?q=1459+Yamato+Rd,+Boca+Raton,+FL+33431" target="_blank" rel="noopener noreferrer" className="nav-link-v2">Open in Maps <ExternalLink size={16} /></a>
               </motion.div>
 
               <motion.div
@@ -469,7 +403,7 @@ const LandingPage = () => {
                 <Phone className="card-icon text-orange" size={32} />
                 <h3>Order Ahead</h3>
                 <p>Call us to skip the line</p>
-                <a href="tel:5616695387" className="phone-link">(561) 669-5387</a>
+                <a href="tel:+15616648524" className="phone-link">+1 (561) 664-8524</a>
               </motion.div>
             </div>
 
@@ -480,7 +414,7 @@ const LandingPage = () => {
               className="visit-map-v2"
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114488.29177114668!2d-80.14498522068991!3d26.46788874136691!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d8e39268f6385d%3A0xe9f7e52b226e6fa2!2sDelray%20Beach%2C%20FL!5e0!3m2!1sen!2s-!4v1711660000000!5m2!1sen!2s"
+                src="https://maps.google.com/maps?q=1459%20Yamato%20Rd%2C%20Boca%20Raton%2C%20FL%2033431&z=15&output=embed"
                 allowFullScreen={true}
                 loading="lazy"
                 title="Google Maps Location"
@@ -528,14 +462,14 @@ const LandingPage = () => {
                   <Phone size={20} className="text-orange" />
                   <div>
                     <span>Call to Order</span>
-                    <p>(561) 669-5387</p>
+                    <p>+1 (561) 664-8524</p>
                   </div>
                 </div>
                 <div className="c-item">
                   <MapPin size={20} className="text-orange" />
                   <div>
                     <span>Truck Location</span>
-                    <p>Delray Beach, FL</p>
+                    <p>1459 Yamato Rd, Boca Raton, FL 33431</p>
                   </div>
                 </div>
               </div>
@@ -621,10 +555,10 @@ const LandingPage = () => {
         /* Hero */
         .hero-section {
           position: relative;
-          padding: 34px 0 74px;
+          padding: 0;
           min-height: calc(100vh - 82px);
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           overflow: hidden;
           isolation: isolate;
         }
@@ -639,32 +573,17 @@ const LandingPage = () => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+          object-position: center 42%;
           transform-origin: center;
+          filter: brightness(1.03) saturate(1.1) contrast(1.04);
         }
         .hero-overlay {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(100deg, rgba(15, 10, 6, 0.8) 0%, rgba(28, 18, 11, 0.7) 42%, rgba(45, 29, 18, 0.52) 68%, rgba(45, 29, 18, 0.38) 100%),
-            radial-gradient(circle at 84% 18%, rgba(240, 165, 0, 0.2), transparent 48%);
+            linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.2) 58%, rgba(0, 0, 0, 0.52) 100%),
+            linear-gradient(90deg, rgba(18, 10, 5, 0.62) 0%, rgba(18, 10, 5, 0.36) 42%, rgba(18, 10, 5, 0.08) 74%, rgba(18, 10, 5, 0) 100%);
           z-index: 1;
-        }
-        .hero-blobs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-        .hero-blob { position: absolute; border-radius: 50%; filter: blur(2px); }
-        .blob-1 {
-          width: min(34vw, 430px);
-          aspect-ratio: 1;
-          left: -120px;
-          top: 20px;
-          background: radial-gradient(circle, rgba(240,165,0,0.17) 0%, rgba(240,165,0,0.05) 65%, transparent 100%);
-        }
-        .blob-2 {
-          width: min(28vw, 340px);
-          aspect-ratio: 1;
-          right: -90px;
-          bottom: -60px;
-          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 70%, transparent 100%);
         }
         .hero-container {
           display: grid;
@@ -673,117 +592,39 @@ const LandingPage = () => {
           align-items: end;
           position: relative;
           z-index: 2;
+          padding-bottom: clamp(2rem, 5.5vh, 3.4rem);
         }
         .hero-content {
           color: #fff;
-          max-width: 760px;
-          background: linear-gradient(160deg, rgba(255, 255, 255, 0.11) 0%, rgba(255,255,255,0.03) 70%);
-          border: 1px solid rgba(255,255,255,0.2);
-          backdrop-filter: blur(7px);
-          border-radius: 28px;
-          padding: clamp(1.2rem, 2.2vw, 2rem);
-          box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+          max-width: 690px;
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          padding: 0;
+          box-shadow: none;
           display: flex;
           flex-direction: column;
           justify-content: center;
+          align-items: flex-start;
         }
         .hero-badge {
           display: inline-flex;
           align-items: center;
-          gap: 0.55rem;
           width: fit-content;
-          padding: 0.45rem 0.8rem;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.32);
-          background: rgba(0,0,0,0.25);
-          color: #fff;
-          font-size: 0.92rem;
+          color: rgba(255,255,255,0.98);
+          font-size: clamp(0.72rem, 1vw, 0.88rem);
           font-weight: 700;
-          margin-bottom: 1.2rem;
+          margin-bottom: 0.55rem;
+          text-shadow: 0 4px 16px rgba(0,0,0,0.55);
         }
-        .badge-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--orange);
-          box-shadow: 0 0 0 4px rgba(240,165,0,0.26);
-        }
-        .hero-headline { font-size: clamp(2.3rem, 4.5vw, 4.1rem); line-height: 0.95; font-weight: 900; font-style: italic; margin-bottom: 0.8rem; color: #fff; letter-spacing: -0.8px; text-shadow: 0 14px 30px rgba(0,0,0,0.38); }
+        .hero-headline { font-size: clamp(2.15rem, 4.7vw, 4.6rem); line-height: 0.96; font-weight: 900; font-style: normal; margin-bottom: 1.05rem; color: #fff; letter-spacing: -0.7px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .hero-headline .line-1,
-        .hero-headline .line-2,
-        .hero-headline .line-3 { display: block; }
-        .hero-headline .line-1 { margin-bottom: 0.2rem; }
-        .hero-headline .line-2 { margin-bottom: 0.15rem; }
+        .hero-headline .line-2 { display: block; }
+        .hero-headline .line-1 { margin-bottom: 0.1rem; }
         .text-stroke { color: #fff; -webkit-text-stroke: 0; }
-        .hero-description { font-size: clamp(0.98rem, 1.4vw, 1.08rem); line-height: 1.5; margin-bottom: 0.7rem; max-width: 620px; color: rgba(255,255,255,0.92); }
-        .hero-quick-badges {
-          display: flex;
-          gap: 0.55rem;
-          flex-wrap: wrap;
-          margin-bottom: 1rem;
-        }
-        .hero-quick-badges span {
-          border: 1px solid rgba(255,255,255,0.28);
-          background: rgba(0,0,0,0.2);
-          border-radius: 999px;
-          color: #fff;
-          font-size: 0.74rem;
-          font-weight: 700;
-          padding: 0.33rem 0.65rem;
-          letter-spacing: 0.2px;
-        }
-        .hero-food-strip {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 0.65rem;
-          margin-bottom: 0.75rem;
-        }
-        .hero-food-tile {
-          display: flex;
-          align-items: center;
-          gap: 0.55rem;
-          background: rgba(255,255,255,0.14);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 14px;
-          padding: 0.45rem 0.5rem;
-          backdrop-filter: blur(2px);
-        }
-        .hero-food-tile img {
-          width: 46px;
-          height: 46px;
-          border-radius: 9px;
-          object-fit: cover;
-          flex-shrink: 0;
-        }
-        .hero-food-tile span {
-          font-size: 0.78rem;
-          font-weight: 700;
-          color: #fff;
-          line-height: 1.2;
-        }
-        .hero-cta-group { display: flex; gap: 1rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
-        .cta-primary { background: var(--orange); color: #1d1208; padding: 1.02rem 2rem; border-radius: 50px; font-weight: 900; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 10px 30px rgba(240,165,0,0.26); border: none; cursor: pointer; transition: 0.3s; }
-        .cta-primary:hover { background: #ffd176; transform: translateY(-3px); }
-        .cta-secondary { background: transparent; color: #fff; padding: 1.02rem 2rem; border-radius: 50px; font-weight: 800; border: 2px solid rgba(255,255,255,0.68); cursor: pointer; transition: 0.3s; }
-        .cta-secondary:hover { background: rgba(255,255,255,0.18); color: #fff; transform: translateY(-3px); }
-        .hero-trust { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.15rem; font-weight: 700; color: rgba(255,255,255,0.95); font-size: 0.95rem; }
-        .trust-stars { display: flex; gap: 4px; }
-        .hero-slide-dots {
-          display: flex;
-          gap: 0.4rem;
-          margin-top: 0.65rem;
-        }
-        .hero-slide-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 999px;
-          background: rgba(255,255,255,0.45);
-          transition: all 0.35s ease;
-        }
-        .hero-slide-dot.active {
-          width: 20px;
-          background: var(--orange);
-        }
+        .hero-cta-group { display: flex; gap: 0.85rem; margin-bottom: 0; flex-wrap: wrap; }
+        .cta-primary { background: #f59e0b; color: #1d1208; padding: 0.55rem 1rem; border-radius: 9px; font-weight: 800; font-size: 0.86rem; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 8px 24px rgba(240,165,0,0.24); border: none; cursor: pointer; transition: 0.25s; text-transform: none; }
+        .cta-primary:hover { background: #ffb93a; transform: translateY(-2px); }
 
         /* Ticker */
         .hero-ticker { padding: 1.5rem 0; overflow: hidden; white-space: nowrap; }
@@ -930,13 +771,9 @@ const LandingPage = () => {
 
         @media (max-width: 1024px) {
           .hero-container, .about-grid, .events-grid, .visit-layout-v2 { grid-template-columns: 1fr; }
-          .hero-content { text-align: center; align-items: center; }
-          .hero-section { padding: 24px 0 56px; min-height: calc(100vh - 72px); }
-          .hero-description { margin: 0 auto 1rem; }
-          .hero-quick-badges { justify-content: center; }
-          .hero-food-strip { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          .hero-cta-group { justify-content: center; }
-          .hero-slide-dots { justify-content: center; }
+          .hero-content { text-align: left; align-items: flex-start; }
+          .hero-section { min-height: calc(100vh - 72px); }
+          .hero-cta-group { justify-content: flex-start; }
           .about-img, .events-img { height: 400px; }
           .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; }
           .gallery-grid-v2 { grid-template-columns: 1fr; grid-template-rows: auto; }
@@ -1079,40 +916,40 @@ const LandingPage = () => {
         /* Floating WhatsApp */
         .floating-whatsapp {
           position: fixed;
-          bottom: 30px;
-          right: 30px;
+          bottom: 24px;
+          right: 24px;
           z-index: 999;
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 0.75rem;
           background: white;
-          padding: 8px 10px 8px 25px;
+          padding: 8px 8px 8px 18px;
           border-radius: 50px;
-          box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+          box-shadow: 0 12px 28px rgba(0,0,0,0.14);
           text-decoration: none;
-          transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          transition: 0.25s ease;
         }
         .wa-label {
           color: var(--espresso);
-          font-weight: 800;
+          font-weight: 700;
           font-family: var(--font-heading);
           text-transform: uppercase;
-          letter-spacing: 1.5px;
-          font-size: 0.8rem;
+          letter-spacing: 1.2px;
+          font-size: 0.72rem;
         }
         .wa-icon {
           background: var(--whatsapp);
-          width: 55px;
-          height: 55px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          animation: wa-pulse 2s infinite;
+          animation: wa-pulse 2.4s infinite;
         }
         .floating-whatsapp:hover {
-          transform: translateY(-5px) scale(1.05);
-          box-shadow: 0 20px 50px rgba(37, 211, 102, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 16px 32px rgba(37, 211, 102, 0.25);
         }
         @keyframes wa-pulse {
           0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
@@ -1122,12 +959,16 @@ const LandingPage = () => {
 
         @media (max-width: 768px) {
           .floating-whatsapp { 
-            padding: 8px; 
-            right: 20px; 
-            bottom: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 6px; 
+            right: 14px; 
+            bottom: 14px; 
+            box-shadow: 0 10px 22px rgba(0,0,0,0.18);
           }
           .wa-label { display: none; }
+          .wa-icon {
+            width: 46px;
+            height: 46px;
+          }
           
           .order-popup { 
             padding: 2.5rem 1.5rem 2rem; 
@@ -1141,20 +982,15 @@ const LandingPage = () => {
           .container { padding: 0 1.2rem; }
           
           /* Hero Mobile Fix */
-          .hero-section { padding: 16px 0 46px; min-height: calc(100vh - 68px); text-align: center; }
-          .hero-overlay { background: linear-gradient(180deg, rgba(15, 10, 6, 0.84) 0%, rgba(15, 10, 6, 0.74) 42%, rgba(15, 10, 6, 0.62) 100%); }
-          .hero-container { grid-template-columns: 1fr; gap: 3rem; }
-          .hero-content { padding: 0.85rem; border-radius: 18px; }
-          .hero-headline { font-size: 2.02rem; margin-bottom: 0.72rem; font-style: italic; }
-          .hero-description { font-size: 0.96rem; margin: 0 auto 0.85rem; }
-          .hero-quick-badges span { font-size: 0.7rem; }
-          .hero-food-strip { grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-bottom: 0.65rem; }
-          .hero-food-tile:nth-child(n+3) { display: none; }
-          .hero-food-tile { padding: 0.4rem 0.42rem; }
-          .hero-food-tile img { width: 40px; height: 40px; }
-          .hero-food-tile span { font-size: 0.72rem; }
-          .hero-cta-group { justify-content: center; gap: 0.7rem; }
-          .cta-primary, .cta-secondary { padding: 0.88rem 1.35rem; font-size: 0.92rem; }
+          .hero-section { padding: 0; min-height: calc(100svh - 68px); text-align: left; }
+          .hero-bg-image { object-position: center; filter: brightness(0.92) saturate(1.05) contrast(1.01); }
+          .hero-overlay { background: linear-gradient(180deg, rgba(15, 10, 6, 0.02) 0%, rgba(15, 10, 6, 0.46) 48%, rgba(15, 10, 6, 0.84) 100%); }
+          .hero-container { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 6.3rem; }
+          .hero-content { padding: 0; border-radius: 0; }
+          .hero-badge { font-size: 0.68rem; margin-bottom: 0.32rem; }
+          .hero-headline { font-size: 1.86rem; margin-bottom: 0.72rem; line-height: 0.94; }
+          .hero-cta-group { justify-content: flex-start; gap: 0.7rem; }
+          .cta-primary { padding: 0.44rem 0.76rem; font-size: 0.7rem; border-radius: 8px; }
 
           .section-header h2 { font-size: 2.5rem; }
           .about-section, .gallery-section, .events-section, .visit-section { padding: 60px 0; }

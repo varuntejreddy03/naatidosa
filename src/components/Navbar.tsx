@@ -198,9 +198,10 @@ const Navbar = () => {
           position: sticky;
           top: 0;
           z-index: 1000;
-          background: #FDF6EC;
-          border-bottom: 1px solid rgba(107, 58, 31, 0.1);
-          height: 82px;
+          background: rgba(253, 246, 236, 0.94);
+          backdrop-filter: blur(8px);
+          border-bottom: 1px solid rgba(107, 58, 31, 0.08);
+          height: 78px;
           display: flex;
           align-items: center;
           transition: all 0.4s ease;
@@ -222,7 +223,7 @@ const Navbar = () => {
           text-decoration: none;
         }
         .nav-brand-logo {
-          height: 68px;
+          height: 64px;
           width: auto;
           object-fit: contain;
           filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
@@ -238,7 +239,7 @@ const Navbar = () => {
           font-family: inherit;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 2px;
+          letter-spacing: 1.8px;
           font-size: 0.8rem;
           color: #5C3A1E;
           background: none;
@@ -275,12 +276,12 @@ const Navbar = () => {
         .nav-cta button {
           background: #F0A500;
           color: white;
-          padding: 0.8rem 1.6rem;
+          padding: 0.72rem 1.45rem;
           border-radius: 50px;
           font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 1.5px;
-          font-size: 0.75rem;
+          letter-spacing: 1.3px;
+          font-size: 0.74rem;
           border: none;
           cursor: pointer;
           transition: 0.3s ease;
@@ -289,12 +290,11 @@ const Navbar = () => {
         .btn-order {
           background: var(--brown) !important;
           color: white !important;
-          animation: pulse-saffron 2.5s infinite;
+          box-shadow: 0 8px 20px rgba(107, 58, 31, 0.22);
         }
-        @keyframes pulse-saffron {
-          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(240, 165, 0, 0.4); }
-          70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(240, 165, 0, 0); }
-          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(240, 165, 0, 0); }
+        .btn-order:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 12px 26px rgba(107, 58, 31, 0.28);
         }
         .mobile-toggle {
           display: none;
