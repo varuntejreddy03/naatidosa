@@ -26,12 +26,8 @@ const heroSlides = [
   { src: '/menu%20images/Ghee%20pudi%20thatte%20idli.jpg', alt: 'Ghee pudi thatte idli' },
   { src: '/menu%20images/dahi-puri.jpg', alt: 'Dahi puri chaat' },
   { src: '/menu%20images/chkn_momos.jpg', alt: 'Chicken momos' },
-  { src: '/menu%20images/mirchi%20bajji.jpg', alt: 'Mirchi bajji' },
   { src: '/menu%20images/Bun_Maska.jpg', alt: 'Bun maska' },
-  { src: '/menu%20images/falooda.jpeg', alt: 'Falooda drink' },
-  { src: '/menu%20images/Muri%20mixture.avif', alt: 'Muri mixture' },
-  { src: '/images/g1.png', alt: 'Masala dosa plating' },
-  { src: '/images/g2.png', alt: 'South Indian meal spread' },
+  { src: '/images/g3.png', alt: 'Freshly plated special' },
 ];
 
 const reviewsData = [
