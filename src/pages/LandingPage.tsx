@@ -27,7 +27,6 @@ const heroSlides = [
   { src: '/menu%20images/dahi-puri.jpg', alt: 'Dahi puri chaat' },
   { src: '/menu%20images/chkn_momos.jpg', alt: 'Chicken momos' },
   { src: '/menu%20images/Bun_Maska.jpg', alt: 'Bun maska' },
-  { src: '/images/g3.png', alt: 'Freshly plated special' },
 ];
 
 const reviewsData = [

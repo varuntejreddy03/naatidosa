@@ -32,7 +32,7 @@ const menuImageMap: Record<number, string> = {
   301: menuImage("Chef's Special Dosa.jpg"),
 
   401: menuImage('Thatte idli.webp'),
-  402: menuImage('Ghee pudi thatte idli.jpg'),
+  402: menuImage('ghee pudi idli.jpeg'),
   403: menuImage('Ghee karam Thatte idli.webp'),
   404: menuImage('Sambar Thatte idli.jpeg'),
 

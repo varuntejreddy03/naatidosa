@@ -126,6 +126,33 @@ const MenuPage = () => {
 
       <section className="menu-list-shell">
         <div className="container">
+          <div className="menu-mobile-top" aria-label="Browse menu categories on mobile">
+            <div className="mobile-search-shell">
+              <Search size={16} className="side-search-icon" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search menu"
+                className="side-search-input"
+              />
+            </div>
+
+            <nav className="mobile-category-strip">
+              {filteredSections.map((section) => (
+                <button
+                  key={`mobile-${section.slug}`}
+                  type="button"
+                  className={`mobile-category-chip ${activeCategory === section.slug ? 'active' : ''}`}
+                  onClick={() => handleCategoryClick(section.slug)}
+                  aria-pressed={activeCategory === section.slug}
+                >
+                  {section.category.split('(')[0].trim()}
+                </button>
+              ))}
+            </nav>
+          </div>
+
           <div className="menu-layout">
             <aside className="menu-side-panel" aria-label="Browse menu categories">
               <div className="side-search-shell">
@@ -249,6 +276,10 @@ const MenuPage = () => {
             grid-template-columns: 280px minmax(0, 1fr);
             gap: 1.5rem;
             align-items: start;
+          }
+
+          .menu-mobile-top {
+            display: none;
           }
 
           .menu-side-panel {
@@ -508,11 +539,67 @@ const MenuPage = () => {
 
           @media (max-width: 1100px) {
             .menu-group {
-              scroll-margin-top: 160px;
+              scroll-margin-top: 210px;
             }
+
+            .menu-mobile-top {
+              display: flex;
+              flex-direction: column;
+              gap: 0.7rem;
+              position: sticky;
+              top: 72px;
+              z-index: 45;
+              background: var(--cream);
+              padding: 0.6rem 0 0.6rem;
+              margin-bottom: 0.8rem;
+            }
+
+            .mobile-search-shell {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              background: #fff;
+              border: 1px solid rgba(107, 58, 31, 0.2);
+              border-radius: 12px;
+              padding: 0.58rem 0.7rem;
+            }
+
+            .mobile-category-strip {
+              display: flex;
+              gap: 0.5rem;
+              overflow-x: auto;
+              padding: 0.1rem 0;
+              scrollbar-width: none;
+            }
+
+            .mobile-category-strip::-webkit-scrollbar {
+              display: none;
+            }
+
+            .mobile-category-chip {
+              flex-shrink: 0;
+              border-radius: 999px;
+              padding: 0.5rem 0.85rem;
+              border: 1px solid rgba(107, 58, 31, 0.2);
+              background: #fff;
+              color: var(--espresso);
+              font-size: 0.82rem;
+              font-weight: 700;
+              line-height: 1;
+              white-space: nowrap;
+              font-family: var(--font-body);
+            }
+
+            .mobile-category-chip.active {
+              background: var(--brown);
+              color: #fff;
+              border-color: var(--brown);
+            }
+
             .menu-layout {
               grid-template-columns: 1fr;
             }
+
             .menu-side-panel {
               display: none;
             }
