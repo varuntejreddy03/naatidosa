@@ -22,12 +22,16 @@ const logo01 = '/images/Naati Dosa Logo-01.png';
 const logo02 = '/images/Naati Dosa Logo-02.png';
 
 const heroSlides = [
-  { src: '/images/hero_dosa_idli_platter.png', alt: 'Naati dosa and idli platter' },
   { src: '/images/hero-dosa.jpg', alt: 'Signature dosa closeup' },
-  { src: '/images/g1.png', alt: 'Signature masala dosa' },
-  { src: '/images/g2.png', alt: 'South Indian spread' },
-  { src: '/images/g3.png', alt: 'Freshly plated special' },
-  { src: '/images/gallery.png', alt: 'Naati Dosa gallery highlight' },
+  { src: '/menu%20images/Ghee%20pudi%20thatte%20idli.jpg', alt: 'Ghee pudi thatte idli' },
+  { src: '/menu%20images/dahi-puri.jpg', alt: 'Dahi puri chaat' },
+  { src: '/menu%20images/chkn_momos.jpg', alt: 'Chicken momos' },
+  { src: '/menu%20images/mirchi%20bajji.jpg', alt: 'Mirchi bajji' },
+  { src: '/menu%20images/Bun_Maska.jpg', alt: 'Bun maska' },
+  { src: '/menu%20images/falooda.jpeg', alt: 'Falooda drink' },
+  { src: '/menu%20images/Muri%20mixture.avif', alt: 'Muri mixture' },
+  { src: '/images/g1.png', alt: 'Masala dosa plating' },
+  { src: '/images/g2.png', alt: 'South Indian meal spread' },
 ];
 
 const reviewsData = [
@@ -561,11 +565,25 @@ const LandingPage = () => {
           align-items: flex-end;
           overflow: hidden;
           isolation: isolate;
+          background:
+            radial-gradient(120% 80% at 10% 100%, rgba(240, 165, 0, 0.3) 0%, rgba(240, 165, 0, 0) 56%),
+            radial-gradient(90% 70% at 100% 0%, rgba(107, 58, 31, 0.42) 0%, rgba(107, 58, 31, 0) 62%),
+            linear-gradient(135deg, #2f1809 0%, #5e3117 38%, #8a4f20 100%);
         }
         .hero-bg-media {
           position: absolute;
           inset: 0;
           z-index: 0;
+        }
+        .hero-bg-media::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background:
+            radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 34%),
+            linear-gradient(120deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 42%);
+          z-index: 1;
         }
         .hero-bg-image {
           position: absolute;
@@ -573,16 +591,17 @@ const LandingPage = () => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center 42%;
+          object-position: center 44%;
           transform-origin: center;
-          filter: brightness(1.03) saturate(1.1) contrast(1.04);
+          filter: brightness(1.02) saturate(1.08) contrast(1.06);
         }
         .hero-overlay {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.2) 58%, rgba(0, 0, 0, 0.52) 100%),
-            linear-gradient(90deg, rgba(18, 10, 5, 0.62) 0%, rgba(18, 10, 5, 0.36) 42%, rgba(18, 10, 5, 0.08) 74%, rgba(18, 10, 5, 0) 100%);
+            linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.24) 55%, rgba(0, 0, 0, 0.58) 100%),
+            linear-gradient(90deg, rgba(22, 12, 6, 0.74) 0%, rgba(22, 12, 6, 0.45) 40%, rgba(22, 12, 6, 0.16) 72%, rgba(22, 12, 6, 0) 100%),
+            radial-gradient(80% 140% at 0% 100%, rgba(240, 165, 0, 0.26) 0%, rgba(240, 165, 0, 0) 58%);
           z-index: 1;
         }
         .hero-container {
