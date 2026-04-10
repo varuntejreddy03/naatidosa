@@ -763,19 +763,7 @@ const LandingPage = () => {
         .legal-right a { color: white; text-decoration: none; transition: 0.3s; }
         .legal-right a:hover { color: var(--orange); }
 
-        @media (max-width: 1024px) {
-          .footer-grid-v3 { grid-template-columns: 1fr; gap: 4rem; text-align: center; }
-          .footer-col p, .footer-contact-info p { text-align: center; justify-content: center; }
-          .footer-nav-list button { text-align: center; }
-          .footer-nav-list button:hover { padding-left: 0; }
-        }
-        @media (max-width: 768px) {
-          .footer-giant-logo { height: 180px; }
-          .footer-tagline { font-size: 1.3rem; }
-          .footer-legal { flex-direction: column; gap: 1.5rem; text-align: center; }
-          .legal-right { gap: 1.5rem; }
-          .b-links { gap: 1.5rem; justify-content: center; }
-        }
+
 
         :root {
           --whatsapp: #25D366;
@@ -962,60 +950,103 @@ const LandingPage = () => {
           
           .order-popup { 
             padding: 2.5rem 1.5rem 2rem; 
-            max-width: 90%;
+            max-width: 92%;
             border-radius: 30px;
           }
           .popup-logo { height: 75px; }
           .popup-header h3 { font-size: 1.6rem; }
-          .popup-btn { padding: 1rem 1.5rem; font-size: 0.95rem; }
+          .popup-btn { padding: 1.1rem 1.5rem; font-size: 0.95rem; }
 
-          .container { padding: 0 1.2rem; }
+          .container { padding: 0 1.5rem; }
           
-          /* Hero Mobile Fix */
-          .hero-section { padding: 0; min-height: calc(100svh - 68px); text-align: left; }
-          .hero-bg-image { object-position: center; filter: brightness(0.92) saturate(1.05) contrast(1.01); }
-          .hero-overlay { background: linear-gradient(180deg, rgba(15, 10, 6, 0.02) 0%, rgba(15, 10, 6, 0.46) 48%, rgba(15, 10, 6, 0.84) 100%); }
-          .hero-container { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 6.3rem; }
-          .hero-content { padding: 0; border-radius: 0; }
-          .hero-badge { font-size: 0.68rem; margin-bottom: 0.32rem; }
-          .hero-headline { font-size: 1.86rem; margin-bottom: 0.72rem; line-height: 0.94; }
-          .hero-cta-group { justify-content: flex-start; gap: 0.7rem; }
-          .cta-primary { padding: 0.44rem 0.76rem; font-size: 0.7rem; border-radius: 8px; }
+          /* Section Basics */
+          .section-header { margin-bottom: 2rem; text-align: center !important; }
+          .section-header h2 { font-size: 2.4rem; line-height: 1.1; margin-bottom: 0.8rem; }
+          .sub-tag { font-size: 1rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 2px; }
+          .about-section, .gallery-section, .events-section, .visit-section, .reviews-section { padding: 60px 0; }
 
-          .section-header h2 { font-size: 2.5rem; }
-          .about-section, .gallery-section, .events-section, .visit-section { padding: 60px 0; }
+          /* Hero Mobile Fix */
+          .hero-section { min-height: calc(100svh - 68px); }
+          .hero-bg-image { object-position: center; }
+          .hero-overlay { background: linear-gradient(180deg, rgba(15, 10, 6, 0.02) 0%, rgba(15, 10, 6, 0.46) 48%, rgba(15, 10, 6, 0.84) 100%); }
+          .hero-container { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 6rem; }
+          .hero-headline { font-size: 1.9rem; line-height: 0.95; }
+          .hero-cta-group { justify-content: flex-start; }
+
+          /* About Mobile */
+          .about-grid { grid-template-columns: 1fr !important; gap: 3rem; text-align: center; }
+          .about-image-wrap { order: 2; margin: 0 auto; width: 100%; max-width: 450px; }
+          .about-text-wrap { order: 1; display: flex; flex-direction: column; align-items: center; }
+          .about-img { height: 350px; border-radius: 25px; }
+          .about-desc { font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.7; }
+          .about-features { gap: 1.5rem; width: 100%; }
+          .a-feat { flex-direction: column; align-items: center; text-align: center; gap: 0.6rem; }
+          .about-badge { right: 10px; bottom: 20px; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
           /* POS Menu Mobile */
           .menu-pos-sidebar { display: none; }
           .menu-pos-body { padding: 0 1rem; height: auto; }
-          .menu-pos-content { overflow-y: visible; }
-          .menu-pos-grid { grid-template-columns: 1fr; }
+          .menu-pos-content { overflow-y: visible; gap: 36px; }
+          .menu-pos-grid { grid-template-columns: 1fr; gap: 10px; }
+          .menu-pos-card { height: auto; padding: 12px; }
+          .menu-pos-img { width: 85px; height: 85px; }
 
-          .about-img, .events-img { height: 300px; border-radius: 20px; }
+          /* Gallery Grid */
+          .gallery-grid-v2 { grid-template-columns: 1fr !important; grid-template-rows: auto !important; gap: 1.5rem; margin-top: 1.5rem; }
+          .g-item { height: 320px; border-radius: 20px; }
+
+          .g-large { height: 320px; grid-row: auto !important; }
+          .g-info { opacity: 1; transform: translateY(0); padding: 2.2rem 1.5rem 1.5rem; background: linear-gradient(transparent, rgba(62,31,0,0.85)); }
+          .g-info h4 { font-size: 1.45rem; }
+
+
+          /* Reviews Mobile - Swipeable Cards */
+          .reviews-grid { 
+            display: flex; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            gap: 1.25rem; 
+            margin: 0 -1.5rem;
+            padding: 1rem 1.5rem 3.5rem;
+            scrollbar-width: none; 
+          }
+          .reviews-grid::-webkit-scrollbar { display: none; }
+          .review-card { 
+            min-width: 285px; 
+            max-width: 285px;
+            flex: 0 0 auto; 
+            scroll-snap-align: center;
+            padding: 2.5rem 1.8rem 2rem;
+            border-radius: 30px;
+          }
+
+          /* Events Mobile */
+          .events-grid { grid-template-columns: 1fr !important; gap: 3.5rem; text-align: center; }
+          .events-text { display: flex; flex-direction: column; align-items: center; }
+          .event-list { margin-top: 2.5rem; gap: 1.5rem; width: 100%; }
+          .event-item { flex-direction: column; text-align: center; gap: 1rem; padding-bottom: 2rem; }
+          .event-date { min-width: 85px; padding: 0.8rem; border-radius: 18px; margin: 0 auto; }
+          .event-info h3 { font-size: 1.5rem; margin-bottom: 0.4rem; }
+          .events-img { height: 320px; border-radius: 30px; }
+
+          /* Visit Mobile */
+          .visit-layout-v2 { grid-template-columns: 1fr !important; gap: 2.5rem; }
+          .visit-info-card { padding: 2.5rem 1.5rem; border-radius: 30px; }
+          .phone-link { font-size: 1.6rem; }
+          .visit-map-v2 { height: 380px; border-radius: 30px; border-width: 4px; }
           
-          /* Gallery Grid Imp */
-          .gallery-grid-v2 { grid-template-columns: 1fr; gap: 1.5rem; }
-          .g-item { height: 300px; }
-          .g-large { grid-row: auto; height: 350px; }
-
-          .visit-layout-v2 { gap: 2.5rem; }
-          .visit-map-v2 { height: 350px; border-radius: 25px; }
-          
-          /* Footer Center Fix */
-          .footer-top { grid-template-columns: 1fr; gap: 4rem; text-align: center; }
-          .f-logo-group { justify-content: center; }
-          .footer-logo-img { height: 150px; }
-          .f-brand-desc { margin: 0 auto 2.5rem; }
-          .f-socials { justify-content: center; }
-          .footer-top h4::after { left: 50%; transform: translateX(-50%); }
-          .f-links button { text-align: center; }
-          .f-contact-items .c-item { justify-content: center; text-align: center; flex-direction: column; }
-          .f-form { flex-direction: column; gap: 1rem; border-radius: 20px; }
-          .f-form input { text-align: center; padding: 1.2rem; }
-          .f-form button { width: 100%; }
-
-          .footer-bottom { flex-direction: column; gap: 1.5rem; text-align: center; }
-          .b-links { gap: 1.5rem; justify-content: center; }
+          /* Footer Mobile */
+          .footer-v3 { padding: 80px 0 40px; }
+          .footer-main-area { margin-bottom: 60px; }
+          .footer-giant-logo { height: 160px; margin-bottom: 1.5rem; }
+          .footer-branding { margin-bottom: 50px; }
+          .footer-tagline { font-size: 1.3rem; margin-bottom: 2rem; }
+          .footer-grid-v3 { grid-template-columns: 1fr !important; gap: 3.5rem; text-align: center; padding-top: 50px; }
+          .footer-col h3 { margin-bottom: 1.2rem; font-size: 1rem; }
+          .footer-nav-list { align-items: center; }
+          .footer-contact-info p { justify-content: center; }
+          .footer-legal { flex-direction: column; gap: 1.2rem; text-align: center; padding-top: 30px; }
+          .legal-right { gap: 1.5rem; }
         }
         `}} />
       {/* Scroll to Top Button */}
